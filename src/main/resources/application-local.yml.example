@@ -1,0 +1,7 @@
+# Sao chép file này thành `application-local.yml` rồi điền thông tin DB của bạn.
+# Chạy app với profile local:  mvn spring-boot:run -Dspring-boot.run.profiles=local
+# (application-local.yml đã được .gitignore, sẽ không bị commit)
+spring:
+  datasource:
+    username: root
+    password: your_mysql_password
