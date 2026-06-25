@@ -1,0 +1,4 @@
+/* Client layout tweaks */
+.navbar-brand {
+    letter-spacing: 0.02em;
+}
