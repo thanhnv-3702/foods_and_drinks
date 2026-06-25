@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
+<body>
+<aside class="admin-sidebar d-flex flex-column flex-shrink-0 p-3 text-white">
+  <a th:href="@{/admin}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <span class="fs-5 fw-semibold">Admin Panel</span>
+  </a>
+  <hr class="border-secondary">
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a th:href="@{/admin}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'dashboard'} ? 'active' : 'link-dark'">
+        Dashboard
+      </a>
+    </li>
+    <li>
+      <a href="#" class="nav-link text-white link-dark">Users</a>
+    </li>
+    <li>
+      <a href="#" class="nav-link text-white link-dark">Teams</a>
+    </li>
+    <li>
+      <a href="#" class="nav-link text-white link-dark">Positions</a>
+    </li>
+    <li>
+      <a href="#" class="nav-link text-white link-dark">Projects</a>
+    </li>
+    <li>
+      <a href="#" class="nav-link text-white link-dark">Skills</a>
+    </li>
+    <li>
+      <a href="#" class="nav-link text-white link-dark">Activity Logs</a>
+    </li>
+  </ul>
+  <hr class="border-secondary">
+  <div class="small text-white-50">
+    <a th:href="@{/}" class="text-white-50 text-decoration-none">&larr; Back to client</a>
+  </div>
+</aside>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Dashboard - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h6 text-muted text-uppercase">Users</h2>
+                    <p class="display-6 mb-0">—</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h6 text-muted text-uppercase">Teams</h2>
+                    <p class="display-6 mb-0">—</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h6 text-muted text-uppercase">Projects</h2>
+                    <p class="display-6 mb-0">—</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="text-muted mt-4 small mb-0">Admin layout — dashboard placeholder (sẽ bổ sung dữ liệu ở các task CRUD).</p>
+</div>
+</body>
+</html>

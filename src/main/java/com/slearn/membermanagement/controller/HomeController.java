@@ -10,6 +10,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("appName", "Member Management System");
+        model.addAttribute("activeMenu", "home");
         return "index";
     }
 }
