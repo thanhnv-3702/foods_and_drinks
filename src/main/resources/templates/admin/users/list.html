@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Users - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div th:replace="~{fragments/flash :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Danh sách người dùng</h2>
+        <a th:href="@{/admin/users/new}" class="btn btn-primary btn-sm">+ Thêm người dùng</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 70px;">ID</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Team</th>
+                    <th>Vị trí</th>
+                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users.content}">
+                    <td th:text="${u.id}">1</td>
+                    <td th:text="${u.name}">Name</td>
+                    <td th:text="${u.email}">email</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${u.role.name() == 'ADMIN'} ? 'bg-danger' : 'bg-secondary'"
+                              th:text="${u.role}">ROLE</span>
+                    </td>
+                    <td th:text="${u.team != null ? u.team.name : '-'}">-</td>
+                    <td th:text="${u.position != null ? u.position.name : '-'}">-</td>
+                    <td class="text-end">
+                        <a th:href="@{/admin/users/{id}/edit(id=${u.id})}"
+                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                        <form th:action="@{/admin/users/{id}/delete(id=${u.id})}" method="post"
+                              class="d-inline" onsubmit="return confirm('Xóa người dùng này?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${users.empty}">
+                    <td colspan="7" class="text-center text-muted py-4">Chưa có người dùng nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-muted small" th:text="|Tổng: ${users.totalElements} người dùng|">Tổng: 0</span>
+        <div th:replace="~{fragments/pagination :: pager(${users}, '/admin/users')}"></div>
+    </div>
+</div>
+</body>
+</html>
