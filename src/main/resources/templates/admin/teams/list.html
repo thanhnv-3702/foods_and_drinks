@@ -32,6 +32,8 @@
                     <td th:text="${t.description}">Desc</td>
                     <td th:text="${t.leader != null ? t.leader.name : '-'}">Leader</td>
                     <td class="text-end">
+                        <a th:href="@{/admin/teams/{id}/members(id=${t.id})}"
+                           class="btn btn-outline-primary btn-sm">Thành viên</a>
                         <a th:href="@{/admin/teams/{id}/edit(id=${t.id})}"
                            class="btn btn-outline-secondary btn-sm">Sửa</a>
                         <form th:action="@{/admin/teams/{id}/delete(id=${t.id})}" method="post"
