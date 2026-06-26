@@ -27,7 +27,8 @@
       <a href="#" class="nav-link text-white link-dark">Projects</a>
     </li>
     <li>
-      <a href="#" class="nav-link text-white link-dark">Skills</a>
+      <a th:href="@{/admin/skills}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'skills'} ? 'active' : 'link-dark'">Skills</a>
     </li>
     <li>
       <a href="#" class="nav-link text-white link-dark">Activity Logs</a>
