@@ -20,7 +20,8 @@
       <a href="#" class="nav-link text-white link-dark">Teams</a>
     </li>
     <li>
-      <a href="#" class="nav-link text-white link-dark">Positions</a>
+      <a th:href="@{/admin/positions}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'positions'} ? 'active' : 'link-dark'">Positions</a>
     </li>
     <li>
       <a href="#" class="nav-link text-white link-dark">Projects</a>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Position Form - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0" th:text="${positionForm.id} != null ? 'Sửa Position' : 'Tạo Position'">Position</h2>
+        <a th:href="@{/admin/positions}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form th:action="${positionForm.id} != null ? @{/admin/positions/{id}(id=${positionForm.id})} : @{/admin/positions}"
+                  method="post" th:object="${positionForm}" novalidate>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên vị trí <span class="text-danger">*</span></label>
+                    <input type="text" id="name" class="form-control" th:field="*{name}"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Lỗi</div>
+                </div>
+                <div class="mb-3">
+                    <label for="abbreviation" class="form-label">Tên viết tắt</label>
+                    <input type="text" id="abbreviation" class="form-control" th:field="*{abbreviation}"
+                           th:classappend="${#fields.hasErrors('abbreviation')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('abbreviation')}"
+                         th:errors="*{abbreviation}">Lỗi</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

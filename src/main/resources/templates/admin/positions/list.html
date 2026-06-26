@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Positions - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div th:replace="~{fragments/flash :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Danh sách Positions</h2>
+        <a th:href="@{/admin/positions/new}" class="btn btn-primary btn-sm">+ Thêm Position</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Tên</th>
+                    <th>Viết tắt</th>
+                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${positions.content}">
+                    <td th:text="${p.id}">1</td>
+                    <td th:text="${p.name}">Developer</td>
+                    <td th:text="${p.abbreviation}">DEV</td>
+                    <td class="text-end">
+                        <a th:href="@{/admin/positions/{id}/edit(id=${p.id})}"
+                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                        <form th:action="@{/admin/positions/{id}/delete(id=${p.id})}" method="post"
+                              class="d-inline"
+                              onsubmit="return confirm('Xóa vị trí này?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${positions.empty}">
+                    <td colspan="4" class="text-center text-muted py-4">Chưa có vị trí nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-muted small"
+              th:text="|Tổng: ${positions.totalElements} vị trí|">Tổng: 0</span>
+        <div th:replace="~{fragments/pagination :: pager(${positions}, '/admin/positions')}"></div>
+    </div>
+</div>
+</body>
+</html>
