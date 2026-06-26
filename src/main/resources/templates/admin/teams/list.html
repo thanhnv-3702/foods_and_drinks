@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Teams - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div th:replace="~{fragments/flash :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Danh sách Teams</h2>
+        <a th:href="@{/admin/teams/new}" class="btn btn-primary btn-sm">+ Thêm Team</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 70px;">ID</th>
+                    <th>Tên team</th>
+                    <th>Mô tả</th>
+                    <th>Leader</th>
+                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${teams.content}">
+                    <td th:text="${t.id}">1</td>
+                    <td th:text="${t.name}">Team A</td>
+                    <td th:text="${t.description}">Desc</td>
+                    <td th:text="${t.leader != null ? t.leader.name : '-'}">Leader</td>
+                    <td class="text-end">
+                        <a th:href="@{/admin/teams/{id}/edit(id=${t.id})}"
+                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                        <form th:action="@{/admin/teams/{id}/delete(id=${t.id})}" method="post"
+                              class="d-inline" onsubmit="return confirm('Xóa team này?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${teams.empty}">
+                    <td colspan="5" class="text-center text-muted py-4">Chưa có team nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-muted small" th:text="|Tổng: ${teams.totalElements} team|">Tổng: 0</span>
+        <div th:replace="~{fragments/pagination :: pager(${teams}, '/admin/teams')}"></div>
+    </div>
+</div>
+</body>
+</html>

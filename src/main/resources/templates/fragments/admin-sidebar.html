@@ -17,7 +17,8 @@
       <a href="#" class="nav-link text-white link-dark">Users</a>
     </li>
     <li>
-      <a href="#" class="nav-link text-white link-dark">Teams</a>
+      <a th:href="@{/admin/teams}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'teams'} ? 'active' : 'link-dark'">Teams</a>
     </li>
     <li>
       <a th:href="@{/admin/positions}" class="nav-link text-white"
