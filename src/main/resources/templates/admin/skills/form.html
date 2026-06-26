@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Skill Form - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0" th:text="${skillForm.id} != null ? 'Sửa Skill' : 'Tạo Skill'">Skill</h2>
+        <a th:href="@{/admin/skills}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form th:action="${skillForm.id} != null ? @{/admin/skills/{id}(id=${skillForm.id})} : @{/admin/skills}"
+                  method="post" th:object="${skillForm}" novalidate>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên kỹ năng <span class="text-danger">*</span></label>
+                    <input type="text" id="name" class="form-control" th:field="*{name}"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Lỗi</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="level" class="form-label">Mức độ</label>
+                        <input type="text" id="level" class="form-control" th:field="*{level}"
+                               placeholder="Beginner / Intermediate / Advanced"
+                               th:classappend="${#fields.hasErrors('level')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('level')}" th:errors="*{level}">Lỗi</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="usedYearNumber" class="form-label">Số năm sử dụng</label>
+                        <input type="number" id="usedYearNumber" class="form-control" th:field="*{usedYearNumber}"
+                               min="0"
+                               th:classappend="${#fields.hasErrors('usedYearNumber')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('usedYearNumber')}"
+                             th:errors="*{usedYearNumber}">Lỗi</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="userId" class="form-label">Người sở hữu <span class="text-danger">*</span></label>
+                    <select id="userId" class="form-select" th:field="*{userId}"
+                            th:classappend="${#fields.hasErrors('userId')} ? 'is-invalid'">
+                        <option value="">-- Chọn người dùng --</option>
+                        <option th:each="u : ${users}" th:value="${u.id}"
+                                th:text="${u.name + ' (' + u.email + ')'}">User</option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}">Lỗi</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
