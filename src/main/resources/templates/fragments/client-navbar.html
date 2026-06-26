@@ -19,8 +19,8 @@
                     <a class="nav-link" href="#"
                        th:classappend="${activeMenu == 'teams'} ? ' active' : ''">Teams</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/profile}"
                        th:classappend="${activeMenu == 'profile'} ? ' active' : ''">Profile</a>
                 </li>
             </ul>
