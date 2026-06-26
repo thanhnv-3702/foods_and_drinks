@@ -1,6 +1,9 @@
 package com.slearn.membermanagement.repository;
 
 import com.slearn.membermanagement.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    boolean existsByEmailAndIdNot(String email, Long id);
+
+    @Override
+    @EntityGraph(attributePaths = {"team", "position"})
+    Page<User> findAll(Pageable pageable);
 
     long countByTeamId(Long teamId);
 

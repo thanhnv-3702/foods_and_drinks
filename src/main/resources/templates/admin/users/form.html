@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>User Form - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0" th:text="${userForm.id} != null ? 'Sửa người dùng' : 'Tạo người dùng'">User</h2>
+        <a th:href="@{/admin/users}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form th:action="${userForm.id} != null ? @{/admin/users/{id}(id=${userForm.id})} : @{/admin/users}"
+                  method="post" th:object="${userForm}" novalidate>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="name" class="form-label">Họ tên <span class="text-danger">*</span></label>
+                        <input type="text" id="name" class="form-control" th:field="*{name}"
+                               th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Lỗi</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" id="email" class="form-control" th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Lỗi</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">
+                            Mật khẩu <span class="text-danger" th:if="${userForm.id == null}">*</span>
+                        </label>
+                        <input type="password" id="password" class="form-control" th:field="*{password}"
+                               autocomplete="new-password"
+                               th:placeholder="${userForm.id != null} ? 'Để trống nếu không đổi' : ''"
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Lỗi</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="birthday" class="form-label">Ngày sinh</label>
+                        <input type="date" id="birthday" class="form-control" th:field="*{birthday}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="role" class="form-label">Vai trò <span class="text-danger">*</span></label>
+                        <select id="role" class="form-select" th:field="*{role}"
+                                th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
+                            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}">ROLE</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Lỗi</div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="teamId" class="form-label">Team</label>
+                        <select id="teamId" class="form-select" th:field="*{teamId}">
+                            <option value="">-- Không thuộc team --</option>
+                            <option th:each="t : ${teams}" th:value="${t.id}" th:text="${t.name}">Team</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="positionId" class="form-label">Vị trí</label>
+                        <select id="positionId" class="form-select" th:field="*{positionId}">
+                            <option value="">-- Chưa gán --</option>
+                            <option th:each="p : ${positions}" th:value="${p.id}" th:text="${p.name}">Position</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
