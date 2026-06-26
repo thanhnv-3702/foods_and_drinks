@@ -12,6 +12,7 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
     @EntityGraph(attributePaths = {"user"})
     List<ProjectMember> findByProjectId(Long projectId);
 
+    @EntityGraph(attributePaths = {"project", "project.team", "project.leader"})
     List<ProjectMember> findByUserId(Long userId);
 
     void deleteByProjectId(Long projectId);
