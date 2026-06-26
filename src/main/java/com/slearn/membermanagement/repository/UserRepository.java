@@ -25,7 +25,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     long countByTeamId(Long teamId);
 
+    @EntityGraph(attributePaths = {"position"})
     List<User> findByTeamIdOrderByNameAsc(Long teamId);
+
+    @Query("select u.team.id, count(u) from User u where u.team is not null group by u.team.id")
+    List<Object[]> countGroupedByTeam();
 
     @Query("select u from User u left join fetch u.team where u.team is null or u.team.id <> :teamId order by u.name asc")
     List<User> findCandidatesForTeam(@Param("teamId") Long teamId);
