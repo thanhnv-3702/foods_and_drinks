@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Team Form - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0" th:text="${teamForm.id} != null ? 'Sửa Team' : 'Tạo Team'">Team</h2>
+        <a th:href="@{/admin/teams}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form th:action="${teamForm.id} != null ? @{/admin/teams/{id}(id=${teamForm.id})} : @{/admin/teams}"
+                  method="post" th:object="${teamForm}" novalidate>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên team <span class="text-danger">*</span></label>
+                    <input type="text" id="name" class="form-control" th:field="*{name}"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Lỗi</div>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Mô tả</label>
+                    <textarea id="description" class="form-control" rows="3" th:field="*{description}"
+                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                         th:errors="*{description}">Lỗi</div>
+                </div>
+                <div class="mb-3">
+                    <label for="leaderId" class="form-label">Leader</label>
+                    <select id="leaderId" class="form-select" th:field="*{leaderId}">
+                        <option value="">-- Không chọn --</option>
+                        <option th:each="u : ${users}" th:value="${u.id}"
+                                th:text="${u.name + ' (' + u.email + ')'}">User</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
