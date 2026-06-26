@@ -26,7 +26,8 @@
          th:classappend="${activeMenu == 'positions'} ? 'active' : 'link-dark'">Positions</a>
     </li>
     <li>
-      <a href="#" class="nav-link text-white link-dark">Projects</a>
+      <a th:href="@{/admin/projects}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'projects'} ? 'active' : 'link-dark'">Projects</a>
     </li>
     <li>
       <a th:href="@{/admin/skills}" class="nav-link text-white"

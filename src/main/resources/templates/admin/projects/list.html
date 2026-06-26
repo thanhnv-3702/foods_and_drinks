@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
+<head>
+    <title>Projects - Admin</title>
+</head>
+<body>
+<div id="admin-content">
+    <div th:replace="~{fragments/flash :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Danh sách dự án</h2>
+        <a th:href="@{/admin/projects/new}" class="btn btn-primary btn-sm">+ Thêm dự án</a>
+    </div>
+
+    <form th:action="@{/admin/projects}" method="get" class="row g-2 align-items-end mb-3">
+        <div class="col-auto">
+            <label for="teamId" class="form-label small mb-1">Lọc theo team</label>
+            <select id="teamId" name="teamId" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="">-- Tất cả team --</option>
+                <option th:each="t : ${teams}" th:value="${t.id}" th:text="${t.name}"
+                        th:selected="${selectedTeamId != null and selectedTeamId == t.id}">Team</option>
+            </select>
+        </div>
+        <div class="col-auto" th:if="${selectedTeamId != null}">
+            <a th:href="@{/admin/projects}" class="btn btn-outline-secondary btn-sm">Bỏ lọc</a>
+        </div>
+    </form>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th>Tên dự án</th>
+                    <th>Viết tắt</th>
+                    <th>Team</th>
+                    <th>Leader</th>
+                    <th>Bắt đầu</th>
+                    <th>Kết thúc</th>
+                    <th class="text-center">Thành viên</th>
+                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${projects.content}">
+                    <td th:text="${p.id}">1</td>
+                    <td th:text="${p.name}">Project</td>
+                    <td th:text="${p.abbreviation}">ABC</td>
+                    <td th:text="${p.team != null ? p.team.name : '-'}">Team</td>
+                    <td th:text="${p.leader != null ? p.leader.name : '-'}">Leader</td>
+                    <td th:text="${p.startDate != null ? #temporals.format(p.startDate, 'dd/MM/yyyy') : '-'}">-</td>
+                    <td th:text="${p.endDate != null ? #temporals.format(p.endDate, 'dd/MM/yyyy') : '-'}">-</td>
+                    <td class="text-center">
+                        <span class="badge bg-info text-dark"
+                              th:text="${memberCounts.containsKey(p.id) ? memberCounts.get(p.id) : 0}">0</span>
+                    </td>
+                    <td class="text-end">
+                        <a th:href="@{/admin/projects/{id}/edit(id=${p.id})}"
+                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                        <form th:action="@{/admin/projects/{id}/delete(id=${p.id})}" method="post"
+                              class="d-inline" onsubmit="return confirm('Xóa dự án này? Toàn bộ thành viên sẽ bị gỡ.');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${projects.empty}">
+                    <td colspan="9" class="text-center text-muted py-4">Chưa có dự án nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-muted small" th:text="|Tổng: ${projects.totalElements} dự án|">Tổng: 0</span>
+        <nav th:if="${projects.totalPages > 1}" aria-label="Pagination">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" th:classappend="${projects.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/projects(page=${projects.number - 1}, size=${projects.size}, teamId=${selectedTeamId})}">&laquo;</a>
+                </li>
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, projects.totalPages - 1)}"
+                    th:classappend="${i == projects.number} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/admin/projects(page=${i}, size=${projects.size}, teamId=${selectedTeamId})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${projects.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/projects(page=${projects.number + 1}, size=${projects.size}, teamId=${selectedTeamId})}">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
