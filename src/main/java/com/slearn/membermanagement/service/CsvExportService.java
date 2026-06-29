@@ -1,11 +1,13 @@
 package com.slearn.membermanagement.service;
 
+import com.slearn.membermanagement.entity.ActivityLog;
 import com.slearn.membermanagement.entity.Position;
 import com.slearn.membermanagement.entity.Project;
 import com.slearn.membermanagement.entity.ProjectMember;
 import com.slearn.membermanagement.entity.Skill;
 import com.slearn.membermanagement.entity.Team;
 import com.slearn.membermanagement.entity.User;
+import com.slearn.membermanagement.repository.ActivityLogRepository;
 import com.slearn.membermanagement.repository.PositionRepository;
 import com.slearn.membermanagement.repository.ProjectMemberRepository;
 import com.slearn.membermanagement.repository.ProjectRepository;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class CsvExportService {
 
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final Sort BY_ID = Sort.by("id").ascending();
 
     private final UserRepository userRepository;
@@ -36,19 +40,22 @@ public class CsvExportService {
     private final TeamRepository teamRepository;
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final ActivityLogRepository activityLogRepository;
 
     public CsvExportService(UserRepository userRepository,
                             SkillRepository skillRepository,
                             PositionRepository positionRepository,
                             TeamRepository teamRepository,
                             ProjectRepository projectRepository,
-                            ProjectMemberRepository projectMemberRepository) {
+                            ProjectMemberRepository projectMemberRepository,
+                            ActivityLogRepository activityLogRepository) {
         this.userRepository = userRepository;
         this.skillRepository = skillRepository;
         this.positionRepository = positionRepository;
         this.teamRepository = teamRepository;
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
+        this.activityLogRepository = activityLogRepository;
     }
 
     @Transactional(readOnly = true)
@@ -138,6 +145,21 @@ public class CsvExportService {
                 rows);
     }
 
+    @Transactional(readOnly = true)
+    public String exportActivityLogs() {
+        List<List<String>> rows = new ArrayList<>();
+        for (ActivityLog log : activityLogRepository.findAll(Sort.by("createdAt").descending())) {
+            rows.add(List.of(
+                    str(log.getId()),
+                    fmtDateTime(log.getCreatedAt()),
+                    nz(log.getAction()),
+                    nz(log.getDescription()),
+                    log.getUser() != null ? nz(log.getUser().getName()) : "Hệ thống"
+            ));
+        }
+        return CsvUtil.build(List.of("ID", "Time", "Action", "Description", "User"), rows);
+    }
+
     private static String skillLabel(Skill s) {
         StringBuilder sb = new StringBuilder(s.getName() == null ? "" : s.getName());
         boolean hasLevel = s.getLevel() != null && !s.getLevel().isBlank();
@@ -157,6 +179,10 @@ public class CsvExportService {
 
     private static String fmt(LocalDate d) {
         return d != null ? d.format(DATE) : "";
+    }
+
+    private static String fmtDateTime(LocalDateTime dt) {
+        return dt != null ? dt.format(DATETIME) : "";
     }
 
     private static String str(Object o) {
