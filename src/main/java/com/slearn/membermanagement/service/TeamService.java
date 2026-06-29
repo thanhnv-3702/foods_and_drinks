@@ -18,10 +18,13 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final ActivityLogService activityLogService;
 
-    public TeamService(TeamRepository teamRepository, UserRepository userRepository) {
+    public TeamService(TeamRepository teamRepository, UserRepository userRepository,
+                       ActivityLogService activityLogService) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional(readOnly = true)
@@ -58,7 +61,10 @@ public class TeamService {
                 .description(form.getDescription())
                 .leader(resolveLeader(form.getLeaderId()))
                 .build();
-        return teamRepository.save(team);
+        teamRepository.save(team);
+        activityLogService.record("CREATE_TEAM",
+                "Tạo team '" + team.getName() + "' (id=" + team.getId() + ")");
+        return team;
     }
 
     @Transactional
@@ -67,7 +73,10 @@ public class TeamService {
         team.setName(form.getName());
         team.setDescription(form.getDescription());
         team.setLeader(resolveLeader(form.getLeaderId()));
-        return teamRepository.save(team);
+        teamRepository.save(team);
+        activityLogService.record("UPDATE_TEAM",
+                "Cập nhật team '" + team.getName() + "' (id=" + team.getId() + ")");
+        return team;
     }
 
     /**
@@ -82,6 +91,8 @@ public class TeamService {
             return "Không thể xóa team \"" + team.getName() + "\" vì còn " + memberCount + " thành viên.";
         }
         teamRepository.delete(team);
+        activityLogService.record("DELETE_TEAM",
+                "Xóa team '" + team.getName() + "' (id=" + id + ")");
         return null;
     }
 

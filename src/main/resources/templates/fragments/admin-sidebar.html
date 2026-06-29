@@ -34,7 +34,8 @@
          th:classappend="${activeMenu == 'skills'} ? 'active' : 'link-dark'">Skills</a>
     </li>
     <li>
-      <a href="#" class="nav-link text-white link-dark">Activity Logs</a>
+      <a th:href="@{/admin/activity-logs}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'activity-logs'} ? 'active' : 'link-dark'">Activity Logs</a>
     </li>
   </ul>
   <hr class="border-secondary">

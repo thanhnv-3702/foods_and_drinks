@@ -25,15 +25,18 @@ public class UserService {
     private final TeamRepository teamRepository;
     private final PositionRepository positionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ActivityLogService activityLogService;
 
     public UserService(UserRepository userRepository,
                        TeamRepository teamRepository,
                        PositionRepository positionRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       ActivityLogService activityLogService) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.positionRepository = positionRepository;
         this.passwordEncoder = passwordEncoder;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional(readOnly = true)
@@ -90,7 +93,10 @@ public class UserService {
                 .team(resolveTeam(form.getTeamId()))
                 .position(resolvePosition(form.getPositionId()))
                 .build();
-        return userRepository.save(user);
+        userRepository.save(user);
+        activityLogService.record("CREATE_USER",
+                "Tạo người dùng '" + user.getName() + "' (" + user.getEmail() + ")");
+        return user;
     }
 
     @Transactional
@@ -105,7 +111,10 @@ public class UserService {
         user.setRole(form.getRole());
         user.setTeam(resolveTeam(form.getTeamId()));
         user.setPosition(resolvePosition(form.getPositionId()));
-        return userRepository.save(user);
+        userRepository.save(user);
+        activityLogService.record("UPDATE_USER",
+                "Cập nhật người dùng '" + user.getName() + "' (id=" + user.getId() + ")");
+        return user;
     }
 
     /**
@@ -120,6 +129,8 @@ public class UserService {
         try {
             userRepository.delete(user);
             userRepository.flush();
+            activityLogService.record("DELETE_USER",
+                    "Xóa người dùng '" + user.getName() + "' (id=" + id + ")");
             return null;
         } catch (DataIntegrityViolationException ex) {
             return "Không thể xóa \"" + user.getName()
