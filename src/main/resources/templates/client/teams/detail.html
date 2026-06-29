@@ -27,8 +27,9 @@
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white fw-semibold">
-                    Thành viên (<span th:text="${#lists.size(members)}">0</span>)
+                <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+                    <span>Thành viên (<span th:text="${#lists.size(members)}">0</span>)</span>
+                    <a th:href="@{/teams/{id}/members(id=${team.id})}" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
                 </div>
                 <div class="card-body p-0">
                     <table class="table mb-0 align-middle">
@@ -41,7 +42,10 @@
                         </thead>
                         <tbody>
                         <tr th:each="m : ${members}">
-                            <td th:text="${m.name}">Name</td>
+                            <td>
+                                <a th:href="@{/members/{id}(id=${m.id})}" class="text-decoration-none"
+                                   th:text="${m.name}">Name</a>
+                            </td>
                             <td th:text="${m.email}">email</td>
                             <td th:text="${m.position != null ? m.position.name : '-'}">-</td>
                         </tr>
