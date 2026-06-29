@@ -57,6 +57,11 @@ public class ClientTeamService {
     }
 
     @Transactional(readOnly = true)
+    public Page<User> getMembers(Long teamId, Pageable pageable) {
+        return userRepository.findByTeamId(teamId, pageable);
+    }
+
+    @Transactional(readOnly = true)
     public List<Project> getProjects(Long teamId) {
         return projectRepository.findByTeamId(teamId);
     }

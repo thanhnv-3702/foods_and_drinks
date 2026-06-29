@@ -28,6 +28,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = {"position"})
     List<User> findByTeamIdOrderByNameAsc(Long teamId);
 
+    @EntityGraph(attributePaths = {"position"})
+    Page<User> findByTeamId(Long teamId, Pageable pageable);
+
     @Query("select u.team.id, count(u) from User u where u.team is not null group by u.team.id")
     List<Object[]> countGroupedByTeam();
 
