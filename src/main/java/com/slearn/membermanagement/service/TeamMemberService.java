@@ -19,13 +19,16 @@ public class TeamMemberService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamMemberHistoryRepository historyRepository;
+    private final ActivityLogService activityLogService;
 
     public TeamMemberService(TeamRepository teamRepository,
                              UserRepository userRepository,
-                             TeamMemberHistoryRepository historyRepository) {
+                             TeamMemberHistoryRepository historyRepository,
+                             ActivityLogService activityLogService) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.historyRepository = historyRepository;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional(readOnly = true)
@@ -79,6 +82,9 @@ public class TeamMemberService {
                 .joinedAt(now)
                 .build();
         historyRepository.save(history);
+
+        activityLogService.record("ADD_MEMBER",
+                "Thêm/di chuyển '" + user.getName() + "' vào team '" + team.getName() + "'");
     }
 
     /**
@@ -93,8 +99,12 @@ public class TeamMemberService {
         }
         LocalDateTime now = LocalDateTime.now();
         closeOpenHistory(userId, now);
+        String oldTeamName = user.getTeam().getName();
         user.setTeam(null);
         userRepository.save(user);
+
+        activityLogService.record("REMOVE_MEMBER",
+                "Gỡ '" + user.getName() + "' khỏi team '" + oldTeamName + "'");
     }
 
     private void closeOpenHistory(Long userId, LocalDateTime when) {

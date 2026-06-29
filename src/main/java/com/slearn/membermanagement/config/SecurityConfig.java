@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.config;
 
 import com.slearn.membermanagement.security.CustomUserDetailsService;
+import com.slearn.membermanagement.security.LogoutActivityHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,9 +15,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final LogoutActivityHandler logoutActivityHandler;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                          LogoutActivityHandler logoutActivityHandler) {
         this.userDetailsService = userDetailsService;
+        this.logoutActivityHandler = logoutActivityHandler;
     }
 
     @Bean
@@ -53,6 +57,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .addLogoutHandler(logoutActivityHandler)
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")

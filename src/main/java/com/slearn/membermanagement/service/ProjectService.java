@@ -30,15 +30,18 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final ActivityLogService activityLogService;
 
     public ProjectService(ProjectRepository projectRepository,
                           ProjectMemberRepository projectMemberRepository,
                           TeamRepository teamRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          ActivityLogService activityLogService) {
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional(readOnly = true)
@@ -104,6 +107,8 @@ public class ProjectService {
                 .build();
         project = projectRepository.save(project);
         syncMembers(project, form.getMemberIds());
+        activityLogService.record("CREATE_PROJECT",
+                "Tạo dự án '" + project.getName() + "' (id=" + project.getId() + ")");
         return project;
     }
 
@@ -118,6 +123,8 @@ public class ProjectService {
         project.setLeader(resolveUser(form.getLeaderId()));
         projectRepository.save(project);
         syncMembers(project, form.getMemberIds());
+        activityLogService.record("UPDATE_PROJECT",
+                "Cập nhật dự án '" + project.getName() + "' (id=" + project.getId() + ")");
         return project;
     }
 
@@ -129,6 +136,8 @@ public class ProjectService {
         Project project = getById(id);
         projectMemberRepository.deleteByProjectId(id);
         projectRepository.delete(project);
+        activityLogService.record("DELETE_PROJECT",
+                "Xóa dự án '" + project.getName() + "' (id=" + id + ")");
     }
 
     /**
