@@ -49,6 +49,11 @@ public class AdminExportController {
         return csv("projects.csv", csvExportService.exportProjects());
     }
 
+    @GetMapping("/activity-logs.csv")
+    public ResponseEntity<Resource> exportActivityLogs() {
+        return csv("activity-logs.csv", csvExportService.exportActivityLogs());
+    }
+
     private ResponseEntity<Resource> csv(String filename, String content) {
         byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
         return ResponseEntity.ok()

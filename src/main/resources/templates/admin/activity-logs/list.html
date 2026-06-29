@@ -10,10 +10,13 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h5 mb-0">Nhật ký hoạt động</h2>
-        <form th:action="@{/admin/activity-logs/clear}" method="post"
-              onsubmit="return confirm('Xóa toàn bộ nhật ký?');" th:if="${!logs.empty}">
-            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa tất cả</button>
-        </form>
+        <div class="d-flex gap-2">
+            <a th:href="@{/admin/export/activity-logs.csv}" class="btn btn-outline-success btn-sm">Export CSV</a>
+            <form th:action="@{/admin/activity-logs/clear}" method="post"
+                  onsubmit="return confirm('Xóa toàn bộ nhật ký?');" th:if="${!logs.empty}">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Xóa tất cả</button>
+            </form>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm">
