@@ -18,6 +18,7 @@ import com.slearn.membermanagement.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import java.util.List;
  * Chỉ chạy một lần (kiểm tra marker email {@code demo_a@slearn.local}).
  */
 @Configuration
+@Profile("!test")
 public class DataInitializer {
 
     private static final String MARKER_EMAIL = "demo_a@slearn.local";

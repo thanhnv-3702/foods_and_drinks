@@ -90,8 +90,14 @@ java -jar target/member-management-0.0.1-SNAPSHOT.jar --spring.profiles.active=l
 ## Kiểm thử
 
 ```bash
+# Chạy toàn bộ unit + integration tests (profile test, H2 in-memory)
 mvn test
+
+# Báo cáo coverage (JaCoCo)
+open target/site/jacoco/index.html
 ```
+
+**Test suite hiện có:** service unit tests (Mockito), controller slice (`@WebMvcTest`), pure unit (`CsvUtil`, security), integration smoke (`HomeIntegrationTest`). Profile `test` tắt `DataInitializer` để dữ liệu test ổn định.
 
 ## SunLint (code quality)
 
