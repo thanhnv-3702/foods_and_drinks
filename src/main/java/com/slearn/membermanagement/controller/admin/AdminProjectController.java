@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
 import com.slearn.membermanagement.dto.ProjectForm;
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminProjectController {
 
     private final ProjectService projectService;
+    private final MessageService messages;
 
-    public AdminProjectController(ProjectService projectService) {
+    public AdminProjectController(ProjectService projectService, MessageService messages) {
         this.projectService = projectService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -39,7 +42,7 @@ public class AdminProjectController {
         model.addAttribute("memberCounts", projectService.memberCountByProject());
         model.addAttribute("teams", projectService.findAllTeams());
         model.addAttribute("selectedTeamId", teamId);
-        model.addAttribute("pageTitle", "Projects");
+        model.addAttribute("pageTitle", messages.get("page.projects"));
         model.addAttribute("activeMenu", "projects");
         return "admin/projects/list";
     }
@@ -48,7 +51,7 @@ public class AdminProjectController {
     public String createForm(Model model) {
         model.addAttribute("projectForm", new ProjectForm());
         populateOptions(model);
-        model.addAttribute("pageTitle", "Tạo dự án");
+        model.addAttribute("pageTitle", messages.get("page.project.create"));
         model.addAttribute("activeMenu", "projects");
         return "admin/projects/form";
     }
@@ -61,12 +64,12 @@ public class AdminProjectController {
         validateDates(form, bindingResult);
         if (bindingResult.hasErrors()) {
             populateOptions(model);
-            model.addAttribute("pageTitle", "Tạo dự án");
+            model.addAttribute("pageTitle", messages.get("page.project.create"));
             model.addAttribute("activeMenu", "projects");
             return "admin/projects/form";
         }
         projectService.create(form);
-        ra.addFlashAttribute("successMessage", "Đã tạo dự án thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.project.created"));
         return "redirect:/admin/projects";
     }
 
@@ -74,7 +77,7 @@ public class AdminProjectController {
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("projectForm", projectService.getFormById(id));
         populateOptions(model);
-        model.addAttribute("pageTitle", "Sửa dự án");
+        model.addAttribute("pageTitle", messages.get("page.project.edit"));
         model.addAttribute("activeMenu", "projects");
         return "admin/projects/form";
     }
@@ -88,19 +91,19 @@ public class AdminProjectController {
         validateDates(form, bindingResult);
         if (bindingResult.hasErrors()) {
             populateOptions(model);
-            model.addAttribute("pageTitle", "Sửa dự án");
+            model.addAttribute("pageTitle", messages.get("page.project.edit"));
             model.addAttribute("activeMenu", "projects");
             return "admin/projects/form";
         }
         projectService.update(id, form);
-        ra.addFlashAttribute("successMessage", "Đã cập nhật dự án thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.project.updated"));
         return "redirect:/admin/projects";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes ra) {
         projectService.delete(id);
-        ra.addFlashAttribute("successMessage", "Đã xóa dự án và gỡ toàn bộ thành viên.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.project.deleted"));
         return "redirect:/admin/projects";
     }
 
@@ -112,8 +115,7 @@ public class AdminProjectController {
     private void validateDates(ProjectForm form, BindingResult bindingResult) {
         if (form.getStartDate() != null && form.getEndDate() != null
                 && form.getEndDate().isBefore(form.getStartDate())) {
-            bindingResult.rejectValue("endDate", "InvalidRange",
-                    "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu");
+            bindingResult.rejectValue("endDate", "csv.error.endBeforeStart");
         }
     }
 }

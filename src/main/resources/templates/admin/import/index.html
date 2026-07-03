@@ -2,110 +2,97 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Import CSV - Admin</title>
+    <title th:text="|#{page.import} - #{nav.admin}|">Import CSV - Admin</title>
 </head>
 <body>
 <div id="admin-content">
     <div th:replace="~{fragments/flash :: flash}"></div>
 
-    <h2 class="h5 mb-3">Import dữ liệu từ CSV</h2>
+    <h2 class="h5 mb-3" th:text="#{admin.import.titleFull}">Import data from CSV</h2>
 
     <div th:if="${importResult != null}" class="alert"
          th:classappend="${importResult.failed == 0} ? 'alert-success' : 'alert-warning'">
-        <strong>Kết quả import [[${importEntity}]]:</strong>
-        Tổng <span th:text="${importResult.total}">0</span> dòng —
-        Thành công <span th:text="${importResult.success}">0</span>,
-        Lỗi <span th:text="${importResult.failed}">0</span>.
+        <strong th:text="#{admin.import.resultTitle(${importEntity})}">Import result:</strong>
+        <span th:text="#{admin.import.resultTotal(${importResult.total}, ${importResult.success}, ${importResult.failed})}">
+            Total 0 rows — Success 0, Errors 0.
+        </span>
         <ul class="mb-0 mt-2" th:if="${importResult.failed > 0}">
             <li th:each="e : ${importResult.errors}">
-                Dòng <span th:text="${e.line}">0</span>: <span th:text="${e.message}">lỗi</span>
+                <span th:text="#{admin.import.lineError(${e.line}, ${e.message})}">Line 0: error</span>
             </li>
         </ul>
     </div>
 
-    <div class="alert alert-info small">
-        File CSV phải có <strong>dòng tiêu đề (header)</strong> ở dòng đầu, mã hóa UTF-8.
-        Cột tham chiếu dùng <em>tên</em> (Team/Position) hoặc <em>email</em> (User/Leader/Member).
+    <div class="alert alert-info small" th:text="#{admin.import.csvHint}">
+        CSV file must have a header row on the first line, UTF-8 encoded.
     </div>
 
     <div class="row g-3">
-        <!-- Positions -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h3 class="h6">Positions</h3>
-                    <p class="text-muted small mb-2">Cột: <code>Name, Abbreviation</code></p>
+                    <h3 class="h6" th:text="#{page.positions}">Positions</h3>
+                    <p class="text-muted small mb-2" th:text="#{admin.import.columns.positions}">Columns: Name, Abbreviation</p>
                     <form th:action="@{/admin/import/positions}" method="post" enctype="multipart/form-data"
                           class="d-flex gap-2">
                         <input type="file" name="file" accept=".csv" class="form-control form-control-sm" required>
-                        <button class="btn btn-primary btn-sm text-nowrap">Import</button>
+                        <button class="btn btn-primary btn-sm text-nowrap" th:text="#{admin.import.submit}">Import</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Skills -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h3 class="h6">Skills</h3>
-                    <p class="text-muted small mb-2">Cột: <code>Name, Level, UsedYearNumber, UserEmail</code></p>
+                    <h3 class="h6" th:text="#{page.skills}">Skills</h3>
+                    <p class="text-muted small mb-2" th:text="#{admin.import.columns.skills}">Columns: Name, Level, UsedYearNumber, UserEmail</p>
                     <form th:action="@{/admin/import/skills}" method="post" enctype="multipart/form-data"
                           class="d-flex gap-2">
                         <input type="file" name="file" accept=".csv" class="form-control form-control-sm" required>
-                        <button class="btn btn-primary btn-sm text-nowrap">Import</button>
+                        <button class="btn btn-primary btn-sm text-nowrap" th:text="#{admin.import.submit}">Import</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Teams -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h3 class="h6">Teams</h3>
-                    <p class="text-muted small mb-2">Cột: <code>Name, Description, LeaderEmail</code></p>
+                    <h3 class="h6" th:text="#{page.teams}">Teams</h3>
+                    <p class="text-muted small mb-2" th:text="#{admin.import.columns.teams}">Columns: Name, Description, LeaderEmail</p>
                     <form th:action="@{/admin/import/teams}" method="post" enctype="multipart/form-data"
                           class="d-flex gap-2">
                         <input type="file" name="file" accept=".csv" class="form-control form-control-sm" required>
-                        <button class="btn btn-primary btn-sm text-nowrap">Import</button>
+                        <button class="btn btn-primary btn-sm text-nowrap" th:text="#{admin.import.submit}">Import</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Users -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h3 class="h6">Users</h3>
-                    <p class="text-muted small mb-2">Cột:
-                        <code>Name, Email, Birthday, Role, TeamName, PositionName, Password, Skills</code><br>
-                        Skills dạng <code>name|level|years; name|level|years</code>.
-                        Password trống → mặc định <code>Password@123</code>.
-                    </p>
+                    <h3 class="h6" th:text="#{page.users}">Users</h3>
+                    <p class="text-muted small mb-2" th:text="#{admin.import.columns.users}">Columns: Name, Email, ...</p>
                     <form th:action="@{/admin/import/users}" method="post" enctype="multipart/form-data"
                           class="d-flex gap-2">
                         <input type="file" name="file" accept=".csv" class="form-control form-control-sm" required>
-                        <button class="btn btn-primary btn-sm text-nowrap">Import</button>
+                        <button class="btn btn-primary btn-sm text-nowrap" th:text="#{admin.import.submit}">Import</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Projects -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h3 class="h6">Projects</h3>
-                    <p class="text-muted small mb-2">Cột:
-                        <code>Name, Abbreviation, StartDate, EndDate, TeamName, LeaderEmail, MemberEmails</code><br>
-                        MemberEmails ngăn cách bằng <code>;</code>
-                    </p>
+                    <h3 class="h6" th:text="#{page.projects}">Projects</h3>
+                    <p class="text-muted small mb-2" th:text="#{admin.import.columns.projects}">Columns: Name, Abbreviation, ...</p>
                     <form th:action="@{/admin/import/projects}" method="post" enctype="multipart/form-data"
                           class="d-flex gap-2">
                         <input type="file" name="file" accept=".csv" class="form-control form-control-sm" required>
-                        <button class="btn btn-primary btn-sm text-nowrap">Import</button>
+                        <button class="btn btn-primary btn-sm text-nowrap" th:text="#{admin.import.submit}">Import</button>
                     </form>
                 </div>
             </div>

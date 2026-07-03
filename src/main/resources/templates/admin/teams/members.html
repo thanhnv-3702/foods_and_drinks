@@ -2,47 +2,44 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Quản lý thành viên - Admin</title>
+    <title th:text="|#{page.team.members} - #{nav.admin}|">Manage members - Admin</title>
 </head>
 <body>
 <div id="admin-content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Thành viên team: <span th:text="${team.name}">Team</span></h2>
-        <a th:href="@{/admin/teams}" class="btn btn-outline-secondary btn-sm">&larr; Danh sách team</a>
+        <h2 class="h5 mb-0" th:text="#{admin.teamMembers.pageTitle(${team.name})}">Team members:</h2>
+        <a th:href="@{/admin/teams}" class="btn btn-outline-secondary btn-sm" th:text="'&larr; ' + #{admin.teamMembers.backToList}">&larr; Team list</a>
     </div>
 
     <div class="row g-4">
-        <!-- Add / move member -->
         <div class="col-md-5">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h3 class="h6">Thêm / Di chuyển thành viên</h3>
-                    <p class="text-muted small">Chọn người dùng để thêm vào team. Nếu họ đang ở team khác,
-                        hệ thống sẽ tự động chuyển và ghi lại lịch sử.</p>
+                    <h3 class="h6" th:text="#{admin.teamMembers.addTitle}">Add / move member</h3>
+                    <p class="text-muted small" th:text="#{admin.teamMembers.addHint}">Select a user to add to the team.</p>
                     <form th:action="@{/admin/teams/{id}/members/add(id=${team.id})}" method="post" class="d-flex gap-2">
                         <select name="userId" class="form-select" required>
-                            <option value="">-- Chọn người dùng --</option>
+                            <option value="" th:text="#{admin.select.user}">-- Select user --</option>
                             <option th:each="u : ${candidates}" th:value="${u.id}"
-                                    th:text="${u.name + ' (' + u.email + ')' + (u.team != null ? ' - đang ở: ' + u.team.name : '')}">User</option>
+                                    th:text="${u.name + ' (' + u.email + ')' + (u.team != null ? #messages.msg('admin.teamMembers.candidate.currentTeam', u.team.name) : '')}">User</option>
                         </select>
-                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <button type="submit" class="btn btn-primary" th:text="#{admin.teamMembers.add}">Add</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Current members -->
         <div class="col-md-7">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h3 class="h6">Thành viên hiện tại (<span th:text="${#lists.size(members)}">0</span>)</h3>
+                    <h3 class="h6" th:text="#{admin.teamMembers.current(${#lists.size(members)})}">Current members</h3>
                     <table class="table table-sm align-middle mb-0">
                         <thead class="table-light">
                         <tr>
-                            <th>Tên</th>
-                            <th>Email</th>
-                            <th class="text-end">Thao tác</th>
+                            <th th:text="#{col.name}">Name</th>
+                            <th th:text="#{col.email}">Email</th>
+                            <th class="text-end" th:text="#{common.actions}">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -52,13 +49,13 @@
                             <td class="text-end">
                                 <form th:action="@{/admin/teams/{tid}/members/{uid}/remove(tid=${team.id},uid=${m.id})}"
                                       method="post" class="d-inline"
-                                      onsubmit="return confirm('Gỡ thành viên này khỏi team?');">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Gỡ</button>
+                                      th:attr="onsubmit=|return confirm('#{admin.confirm.removeMember}');|">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{admin.remove}">Remove</button>
                                 </form>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(members)}">
-                            <td colspan="3" class="text-center text-muted py-3">Team chưa có thành viên.</td>
+                            <td colspan="3" class="text-center text-muted py-3" th:text="#{admin.empty.teamMembers}">Team has no members yet.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -67,31 +64,30 @@
         </div>
     </div>
 
-    <!-- History -->
     <div class="card border-0 shadow-sm mt-4">
         <div class="card-body">
-            <h3 class="h6">Lịch sử thành viên</h3>
+            <h3 class="h6" th:text="#{admin.teamMembers.history}">Member history</h3>
             <table class="table table-sm align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th>Thành viên</th>
-                    <th>Tham gia</th>
-                    <th>Rời</th>
-                    <th>Trạng thái</th>
+                    <th th:text="#{admin.teamMembers.history.member}">Member</th>
+                    <th th:text="#{admin.teamMembers.history.joined}">Joined</th>
+                    <th th:text="#{admin.teamMembers.history.left}">Left</th>
+                    <th th:text="#{admin.teamMembers.history.status}">Status</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="h : ${histories}">
                     <td th:text="${h.user.name}">Name</td>
                     <td th:text="${#temporals.format(h.joinedAt, 'dd/MM/yyyy HH:mm')}">--</td>
-                    <td th:text="${h.leftAt != null ? #temporals.format(h.leftAt, 'dd/MM/yyyy HH:mm') : '-'}">--</td>
+                    <td th:text="${h.leftAt != null ? #temporals.format(h.leftAt, 'dd/MM/yyyy HH:mm') : #messages.msg('common.none')}">--</td>
                     <td>
-                        <span th:if="${h.leftAt == null}" class="badge bg-success">Đang trong team</span>
-                        <span th:unless="${h.leftAt == null}" class="badge bg-secondary">Đã rời</span>
+                        <span th:if="${h.leftAt == null}" class="badge bg-success" th:text="#{admin.teamMembers.status.active}">In team</span>
+                        <span th:unless="${h.leftAt == null}" class="badge bg-secondary" th:text="#{admin.teamMembers.status.left}">Left</span>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(histories)}">
-                    <td colspan="4" class="text-center text-muted py-3">Chưa có lịch sử.</td>
+                    <td colspan="4" class="text-center text-muted py-3" th:text="#{admin.empty.history}">No history yet.</td>
                 </tr>
                 </tbody>
             </table>

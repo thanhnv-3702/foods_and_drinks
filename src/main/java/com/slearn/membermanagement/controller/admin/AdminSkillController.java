@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
 import com.slearn.membermanagement.dto.SkillForm;
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.SkillService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminSkillController {
 
     private final SkillService skillService;
+    private final MessageService messages;
 
-    public AdminSkillController(SkillService skillService) {
+    public AdminSkillController(SkillService skillService, MessageService messages) {
         this.skillService = skillService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -35,7 +38,7 @@ public class AdminSkillController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<?> skills = skillService.findAll(pageable);
         model.addAttribute("skills", skills);
-        model.addAttribute("pageTitle", "Skills");
+        model.addAttribute("pageTitle", messages.get("page.skills"));
         model.addAttribute("activeMenu", "skills");
         return "admin/skills/list";
     }
@@ -44,7 +47,7 @@ public class AdminSkillController {
     public String createForm(Model model) {
         model.addAttribute("skillForm", new SkillForm());
         model.addAttribute("users", skillService.findAllUsers());
-        model.addAttribute("pageTitle", "Tạo Skill");
+        model.addAttribute("pageTitle", messages.get("page.skill.create"));
         model.addAttribute("activeMenu", "skills");
         return "admin/skills/form";
     }
@@ -56,12 +59,12 @@ public class AdminSkillController {
                          RedirectAttributes ra) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("users", skillService.findAllUsers());
-            model.addAttribute("pageTitle", "Tạo Skill");
+            model.addAttribute("pageTitle", messages.get("page.skill.create"));
             model.addAttribute("activeMenu", "skills");
             return "admin/skills/form";
         }
         skillService.create(form);
-        ra.addFlashAttribute("successMessage", "Đã tạo kỹ năng thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.skill.created"));
         return "redirect:/admin/skills";
     }
 
@@ -69,7 +72,7 @@ public class AdminSkillController {
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("skillForm", skillService.getFormById(id));
         model.addAttribute("users", skillService.findAllUsers());
-        model.addAttribute("pageTitle", "Sửa Skill");
+        model.addAttribute("pageTitle", messages.get("page.skill.edit"));
         model.addAttribute("activeMenu", "skills");
         return "admin/skills/form";
     }
@@ -82,19 +85,19 @@ public class AdminSkillController {
                          RedirectAttributes ra) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("users", skillService.findAllUsers());
-            model.addAttribute("pageTitle", "Sửa Skill");
+            model.addAttribute("pageTitle", messages.get("page.skill.edit"));
             model.addAttribute("activeMenu", "skills");
             return "admin/skills/form";
         }
         skillService.update(id, form);
-        ra.addFlashAttribute("successMessage", "Đã cập nhật kỹ năng thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.skill.updated"));
         return "redirect:/admin/skills";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes ra) {
         skillService.delete(id);
-        ra.addFlashAttribute("successMessage", "Đã xóa kỹ năng.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.skill.deleted"));
         return "redirect:/admin/skills";
     }
 }

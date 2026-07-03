@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <body>
-<!--
-  Fragment phân trang dùng chung cho admin.
-  Tham số: page (Spring Data Page), baseUrl (đường dẫn list).
--->
-<nav th:fragment="pager(page, baseUrl)" th:if="${page.totalPages > 1}" aria-label="Pagination">
+<nav th:fragment="pager(page, baseUrl)" th:if="${page.totalPages > 1}" th:attr="aria-label=#{pagination.ariaLabel}">
     <ul class="pagination pagination-sm mb-0">
         <li class="page-item" th:classappend="${page.first} ? 'disabled'">
-            <a class="page-link" th:href="@{${baseUrl}(page=${page.number - 1}, size=${page.size})}">&laquo;</a>
+            <a class="page-link" th:href="@{${baseUrl}(page=${page.number - 1}, size=${page.size})}"
+               th:attr="aria-label=#{pagination.previous}">&laquo;</a>
         </li>
         <li class="page-item"
             th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
@@ -16,7 +13,8 @@
             <a class="page-link" th:href="@{${baseUrl}(page=${i}, size=${page.size})}" th:text="${i + 1}">1</a>
         </li>
         <li class="page-item" th:classappend="${page.last} ? 'disabled'">
-            <a class="page-link" th:href="@{${baseUrl}(page=${page.number + 1}, size=${page.size})}">&raquo;</a>
+            <a class="page-link" th:href="@{${baseUrl}(page=${page.number + 1}, size=${page.size})}"
+               th:attr="aria-label=#{pagination.next}">&raquo;</a>
         </li>
     </ul>
 </nav>

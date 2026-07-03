@@ -9,11 +9,13 @@ import com.slearn.membermanagement.repository.PositionRepository;
 import com.slearn.membermanagement.repository.TeamRepository;
 import com.slearn.membermanagement.repository.UserRepository;
 import com.slearn.membermanagement.support.TestEntityFactory;
+import com.slearn.membermanagement.support.TestMessageSupport;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,6 +49,9 @@ class UserServiceTest {
 
     @Mock
     private ActivityLogService activityLogService;
+
+    @Spy
+    private MessageService messages = TestMessageSupport.vietnamese();
 
     @InjectMocks
     private UserService userService;

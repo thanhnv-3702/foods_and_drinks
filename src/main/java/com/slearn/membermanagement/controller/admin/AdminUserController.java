@@ -3,6 +3,7 @@ package com.slearn.membermanagement.controller.admin;
 import com.slearn.membermanagement.dto.UserForm;
 import com.slearn.membermanagement.entity.Role;
 import com.slearn.membermanagement.security.CustomUserDetails;
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -27,9 +28,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminUserController {
 
     private final UserService userService;
+    private final MessageService messages;
 
-    public AdminUserController(UserService userService) {
+    public AdminUserController(UserService userService, MessageService messages) {
         this.userService = userService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -39,7 +42,7 @@ public class AdminUserController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<?> users = userService.findAll(pageable);
         model.addAttribute("users", users);
-        model.addAttribute("pageTitle", "Users");
+        model.addAttribute("pageTitle", messages.get("page.users"));
         model.addAttribute("activeMenu", "users");
         return "admin/users/list";
     }
@@ -48,7 +51,7 @@ public class AdminUserController {
     public String createForm(Model model) {
         model.addAttribute("userForm", UserForm.builder().role(Role.USER).build());
         populateOptions(model);
-        model.addAttribute("pageTitle", "Tạo người dùng");
+        model.addAttribute("pageTitle", messages.get("page.user.create"));
         model.addAttribute("activeMenu", "users");
         return "admin/users/form";
     }
@@ -61,12 +64,12 @@ public class AdminUserController {
         validateOnCreate(form, bindingResult);
         if (bindingResult.hasErrors()) {
             populateOptions(model);
-            model.addAttribute("pageTitle", "Tạo người dùng");
+            model.addAttribute("pageTitle", messages.get("page.user.create"));
             model.addAttribute("activeMenu", "users");
             return "admin/users/form";
         }
         userService.create(form);
-        ra.addFlashAttribute("successMessage", "Đã tạo người dùng thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.user.created"));
         return "redirect:/admin/users";
     }
 
@@ -74,7 +77,7 @@ public class AdminUserController {
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("userForm", userService.getFormById(id));
         populateOptions(model);
-        model.addAttribute("pageTitle", "Sửa người dùng");
+        model.addAttribute("pageTitle", messages.get("page.user.edit"));
         model.addAttribute("activeMenu", "users");
         return "admin/users/form";
     }
@@ -88,12 +91,12 @@ public class AdminUserController {
         validateOnUpdate(id, form, bindingResult);
         if (bindingResult.hasErrors()) {
             populateOptions(model);
-            model.addAttribute("pageTitle", "Sửa người dùng");
+            model.addAttribute("pageTitle", messages.get("page.user.edit"));
             model.addAttribute("activeMenu", "users");
             return "admin/users/form";
         }
         userService.update(id, form);
-        ra.addFlashAttribute("successMessage", "Đã cập nhật người dùng thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.user.updated"));
         return "redirect:/admin/users";
     }
 
@@ -106,7 +109,7 @@ public class AdminUserController {
         if (error != null) {
             ra.addFlashAttribute("errorMessage", error);
         } else {
-            ra.addFlashAttribute("successMessage", "Đã xóa người dùng.");
+            ra.addFlashAttribute("successMessage", messages.get("flash.user.deleted"));
         }
         return "redirect:/admin/users";
     }
@@ -119,16 +122,16 @@ public class AdminUserController {
 
     private void validateOnCreate(UserForm form, BindingResult bindingResult) {
         if (!StringUtils.hasText(form.getPassword())) {
-            bindingResult.rejectValue("password", "NotBlank", "Mật khẩu không được để trống");
+            bindingResult.rejectValue("password", "validation.password.required");
         } else if (form.getPassword().length() < 6) {
-            bindingResult.rejectValue("password", "Size", "Mật khẩu tối thiểu 6 ký tự");
+            bindingResult.rejectValue("password", "validation.password.min");
         }
         checkEmailUnique(form, null, bindingResult);
     }
 
     private void validateOnUpdate(Long id, UserForm form, BindingResult bindingResult) {
         if (StringUtils.hasText(form.getPassword()) && form.getPassword().length() < 6) {
-            bindingResult.rejectValue("password", "Size", "Mật khẩu tối thiểu 6 ký tự");
+            bindingResult.rejectValue("password", "validation.password.min");
         }
         checkEmailUnique(form, id, bindingResult);
     }
@@ -136,7 +139,7 @@ public class AdminUserController {
     private void checkEmailUnique(UserForm form, Long excludeId, BindingResult bindingResult) {
         if (StringUtils.hasText(form.getEmail())
                 && userService.emailExists(form.getEmail(), excludeId)) {
-            bindingResult.rejectValue("email", "Duplicate", "Email đã được sử dụng");
+            bindingResult.rejectValue("email", "validation.email.duplicate");
         }
     }
 }

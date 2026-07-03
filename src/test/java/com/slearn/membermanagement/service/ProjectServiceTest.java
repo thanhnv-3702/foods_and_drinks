@@ -11,11 +11,13 @@ import com.slearn.membermanagement.repository.ProjectRepository;
 import com.slearn.membermanagement.repository.TeamRepository;
 import com.slearn.membermanagement.repository.UserRepository;
 import com.slearn.membermanagement.support.TestEntityFactory;
+import com.slearn.membermanagement.support.TestMessageSupport;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +54,9 @@ class ProjectServiceTest {
 
     @Mock
     private NotificationService notificationService;
+
+    @Spy
+    private MessageService messages = TestMessageSupport.vietnamese();
 
     @InjectMocks
     private ProjectService projectService;

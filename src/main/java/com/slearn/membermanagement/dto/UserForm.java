@@ -21,13 +21,13 @@ public class UserForm {
 
     private Long id;
 
-    @NotBlank(message = "Họ tên không được để trống")
-    @Size(max = 150, message = "Họ tên tối đa 150 ký tự")
+    @NotBlank(message = "{validation.name.required}")
+    @Size(max = 150, message = "{validation.name.max}")
     private String name;
 
-    @NotBlank(message = "Email không được để trống")
-    @Email(message = "Email không hợp lệ")
-    @Size(max = 150, message = "Email tối đa 150 ký tự")
+    @NotBlank(message = "{validation.email.required}")
+    @Email(message = "{validation.email.invalid}")
+    @Size(max = 150, message = "{validation.email.max}")
     private String email;
 
     /**
@@ -39,7 +39,7 @@ public class UserForm {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthday;
 
-    @NotNull(message = "Phải chọn vai trò")
+    @NotNull(message = "{validation.role.required}")
     private Role role;
 
     private Long teamId;

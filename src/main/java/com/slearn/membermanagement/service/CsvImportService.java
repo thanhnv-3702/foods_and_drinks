@@ -40,6 +40,7 @@ public class CsvImportService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MessageService messages;
 
     public CsvImportService(UserRepository userRepository,
                             SkillRepository skillRepository,
@@ -47,7 +48,8 @@ public class CsvImportService {
                             TeamRepository teamRepository,
                             ProjectRepository projectRepository,
                             ProjectMemberRepository projectMemberRepository,
-                            PasswordEncoder passwordEncoder) {
+                            PasswordEncoder passwordEncoder,
+                            MessageService messages) {
         this.userRepository = userRepository;
         this.skillRepository = skillRepository;
         this.positionRepository = positionRepository;
@@ -55,6 +57,7 @@ public class CsvImportService {
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.messages = messages;
     }
 
     // ---- Positions: Name, Abbreviation ----
@@ -66,7 +69,7 @@ public class CsvImportService {
             int line = i + 1;
             String name = cell(r, 0);
             if (name.isEmpty()) {
-                result.addError(line, "Thiếu Name");
+                result.addError(line, messages.get("csv.error.missingName"));
                 continue;
             }
             positionRepository.save(Position.builder()
@@ -86,16 +89,16 @@ public class CsvImportService {
             String name = cell(r, 0);
             String email = cell(r, 3);
             if (name.isEmpty()) {
-                result.addError(line, "Thiếu Name");
+                result.addError(line, messages.get("csv.error.missingName"));
                 continue;
             }
             if (email.isEmpty()) {
-                result.addError(line, "Thiếu UserEmail");
+                result.addError(line, messages.get("csv.error.missingUserEmail"));
                 continue;
             }
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isEmpty()) {
-                result.addError(line, "Không tìm thấy user với email: " + email);
+                result.addError(line, messages.get("csv.error.userNotFound", email));
                 continue;
             }
             Integer years = null;
@@ -104,7 +107,7 @@ public class CsvImportService {
                 try {
                     years = Integer.parseInt(yearsRaw);
                 } catch (NumberFormatException ex) {
-                    result.addError(line, "UsedYearNumber không hợp lệ: " + yearsRaw);
+                    result.addError(line, messages.get("csv.error.invalidUsedYears", yearsRaw));
                     continue;
                 }
             }
@@ -125,7 +128,7 @@ public class CsvImportService {
             int line = i + 1;
             String name = cell(r, 0);
             if (name.isEmpty()) {
-                result.addError(line, "Thiếu Name");
+                result.addError(line, messages.get("csv.error.missingName"));
                 continue;
             }
             User leader = null;
@@ -133,7 +136,7 @@ public class CsvImportService {
             if (!leaderEmail.isEmpty()) {
                 Optional<User> opt = userRepository.findByEmail(leaderEmail);
                 if (opt.isEmpty()) {
-                    result.addError(line, "Không tìm thấy leader với email: " + leaderEmail);
+                    result.addError(line, messages.get("csv.error.leaderNotFound", leaderEmail));
                     continue;
                 }
                 leader = opt.get();
@@ -155,15 +158,15 @@ public class CsvImportService {
             String name = cell(r, 0);
             String email = cell(r, 1);
             if (name.isEmpty() || email.isEmpty()) {
-                result.addError(line, "Thiếu Name hoặc Email");
+                result.addError(line, messages.get("csv.error.missingNameOrEmail"));
                 continue;
             }
             if (!email.contains("@")) {
-                result.addError(line, "Email không hợp lệ: " + email);
+                result.addError(line, messages.get("csv.error.invalidEmail", email));
                 continue;
             }
             if (userRepository.existsByEmail(email)) {
-                result.addError(line, "Email đã tồn tại: " + email);
+                result.addError(line, messages.get("csv.error.emailExists", email));
                 continue;
             }
 
@@ -173,7 +176,7 @@ public class CsvImportService {
                 try {
                     birthday = LocalDate.parse(birthdayRaw, DATE);
                 } catch (Exception ex) {
-                    result.addError(line, "Birthday không hợp lệ (yyyy-MM-dd): " + birthdayRaw);
+                    result.addError(line, messages.get("csv.error.invalidBirthday", birthdayRaw));
                     continue;
                 }
             }
@@ -184,7 +187,7 @@ public class CsvImportService {
                 try {
                     role = Role.valueOf(roleRaw.toUpperCase());
                 } catch (IllegalArgumentException ex) {
-                    result.addError(line, "Role không hợp lệ (USER/ADMIN): " + roleRaw);
+                    result.addError(line, messages.get("csv.error.invalidRole", roleRaw));
                     continue;
                 }
             }
@@ -194,7 +197,7 @@ public class CsvImportService {
             if (!teamName.isEmpty()) {
                 Optional<Team> opt = teamRepository.findFirstByNameIgnoreCase(teamName);
                 if (opt.isEmpty()) {
-                    result.addError(line, "Không tìm thấy team: " + teamName);
+                    result.addError(line, messages.get("csv.error.teamNotFound", teamName));
                     continue;
                 }
                 team = opt.get();
@@ -205,7 +208,7 @@ public class CsvImportService {
             if (!positionName.isEmpty()) {
                 Optional<Position> opt = positionRepository.findFirstByNameIgnoreCase(positionName);
                 if (opt.isEmpty()) {
-                    result.addError(line, "Không tìm thấy position: " + positionName);
+                    result.addError(line, messages.get("csv.error.positionNotFound", positionName));
                     continue;
                 }
                 position = opt.get();
@@ -264,16 +267,16 @@ public class CsvImportService {
             String name = cell(r, 0);
             String teamName = cell(r, 4);
             if (name.isEmpty()) {
-                result.addError(line, "Thiếu Name");
+                result.addError(line, messages.get("csv.error.missingName"));
                 continue;
             }
             if (teamName.isEmpty()) {
-                result.addError(line, "Thiếu TeamName");
+                result.addError(line, messages.get("csv.error.missingTeamName"));
                 continue;
             }
             Optional<Team> team = teamRepository.findFirstByNameIgnoreCase(teamName);
             if (team.isEmpty()) {
-                result.addError(line, "Không tìm thấy team: " + teamName);
+                result.addError(line, messages.get("csv.error.teamNotFound", teamName));
                 continue;
             }
 
@@ -289,11 +292,11 @@ public class CsvImportService {
                     end = LocalDate.parse(e, DATE);
                 }
             } catch (Exception ex) {
-                result.addError(line, "Ngày không hợp lệ (yyyy-MM-dd)");
+                result.addError(line, messages.get("csv.error.invalidDate"));
                 continue;
             }
             if (start != null && end != null && end.isBefore(start)) {
-                result.addError(line, "EndDate phải >= StartDate");
+                result.addError(line, messages.get("csv.error.endBeforeStart"));
                 continue;
             }
 
@@ -302,7 +305,7 @@ public class CsvImportService {
             if (!leaderEmail.isEmpty()) {
                 Optional<User> opt = userRepository.findByEmail(leaderEmail);
                 if (opt.isEmpty()) {
-                    result.addError(line, "Không tìm thấy leader với email: " + leaderEmail);
+                    result.addError(line, messages.get("csv.error.leaderNotFound", leaderEmail));
                     continue;
                 }
                 leader = opt.get();
@@ -320,7 +323,7 @@ public class CsvImportService {
                     }
                     Optional<User> opt = userRepository.findByEmail(e);
                     if (opt.isEmpty()) {
-                        result.addError(line, "Không tìm thấy member với email: " + e);
+                        result.addError(line, messages.get("csv.error.memberNotFound", e));
                         memberError = true;
                         break;
                     }

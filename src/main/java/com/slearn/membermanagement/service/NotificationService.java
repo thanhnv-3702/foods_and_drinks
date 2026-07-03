@@ -34,13 +34,16 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final UserRepository userRepository;
+    private final MessageService messages;
 
     public NotificationService(NotificationRepository notificationRepository,
                                ProjectMemberRepository projectMemberRepository,
-                               UserRepository userRepository) {
+                               UserRepository userRepository,
+                               MessageService messages) {
         this.notificationRepository = notificationRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.userRepository = userRepository;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +59,7 @@ public class NotificationService {
     public Notification getMyNotification(Long id) {
         Long userId = currentUserId();
         return notificationRepository.findByIdAndRecipientId(id, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy notification id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.notification.notFound", id)));
     }
 
     @Transactional
@@ -101,10 +104,11 @@ public class NotificationService {
         }
 
         String title = buildTitle(NotificationType.TEAM, action, team.getName());
-        String content = "Team: " + team.getName()
-                + "\nLeader: " + managerName(team.getLeader())
-                + "\nNgười thao tác: " + actorName()
-                + "\nThời gian: " + TIME_FORMAT.format(LocalDateTime.now());
+        String content = messages.get("notification.content.team",
+                team.getName(),
+                managerName(team.getLeader()),
+                actorName(),
+                TIME_FORMAT.format(LocalDateTime.now()));
 
         saveNotifications(recipients, NotificationType.TEAM, action, title, content);
     }
@@ -124,10 +128,11 @@ public class NotificationService {
         }
 
         String title = buildTitle(NotificationType.PROJECT, action, project.getName());
-        String content = "Project: " + project.getName()
-                + "\nLeader: " + managerName(project.getLeader())
-                + "\nNgười thao tác: " + actorName()
-                + "\nThời gian: " + TIME_FORMAT.format(LocalDateTime.now());
+        String content = messages.get("notification.content.project",
+                project.getName(),
+                managerName(project.getLeader()),
+                actorName(),
+                TIME_FORMAT.format(LocalDateTime.now()));
 
         saveNotifications(recipients, NotificationType.PROJECT, action, title, content);
     }
@@ -149,14 +154,14 @@ public class NotificationService {
 
     private String buildTitle(NotificationType type, NotificationAction action, String targetName) {
         return switch (action) {
-            case CREATE -> "[" + type.name() + "] Đã tạo: " + targetName;
-            case UPDATE -> "[" + type.name() + "] Đã cập nhật: " + targetName;
-            case DELETE -> "[" + type.name() + "] Đã xóa: " + targetName;
+            case CREATE -> messages.get("notification.title.created", type.name(), targetName);
+            case UPDATE -> messages.get("notification.title.updated", type.name(), targetName);
+            case DELETE -> messages.get("notification.title.deleted", type.name(), targetName);
         };
     }
 
     private String managerName(User manager) {
-        return manager != null ? manager.getName() : "Chưa có";
+        return manager != null ? manager.getName() : messages.get("notification.leader.none");
     }
 
     private String actorName() {
@@ -164,7 +169,7 @@ public class NotificationService {
         if (auth != null && auth.getPrincipal() instanceof CustomUserDetails details) {
             return details.getDisplayName();
         }
-        return "Hệ thống";
+        return messages.get("notification.actor.system");
     }
 
     private Long currentUserId() {
@@ -172,6 +177,6 @@ public class NotificationService {
         if (auth != null && auth.getPrincipal() instanceof CustomUserDetails details) {
             return details.getUser().getId();
         }
-        throw new IllegalStateException("Không tìm thấy user đăng nhập hiện tại");
+        throw new IllegalStateException(messages.get("error.auth.noCurrentUser"));
     }
 }

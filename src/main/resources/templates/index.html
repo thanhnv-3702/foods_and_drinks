@@ -3,19 +3,19 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout/client :: layout(~{::title}, ~{::#client-content})}">
 <head>
-    <title>Home - Member Management</title>
+    <title th:text="#{page.home}">Home - Member Management</title>
 </head>
 <body>
 <div id="client-content">
     <div class="techja-hero text-center">
         <img th:src="@{/images/techja-icon.svg}" alt="" width="48" height="48" class="mb-3">
-        <h1 class="display-5" th:text="${appName}">Member Management System</h1>
-        <p class="lead text-muted mb-4">Spring Boot + Thymeleaf + MySQL</p>
-        <span class="badge bg-success">Running</span>
+        <h1 class="display-5" th:text="${appName} ?: #{app.name}">Member Management System</h1>
+        <p class="lead text-muted mb-4" th:text="#{home.subtitle}">Spring Boot + Thymeleaf + MySQL</p>
+        <span class="badge bg-success" th:text="#{common.running}">Running</span>
         <div class="mt-4 d-flex flex-wrap justify-content-center gap-2">
-            <a th:href="@{/teams}" class="btn btn-primary">Xem Teams</a>
-            <a th:href="@{/login}" class="btn btn-outline-primary" sec:authorize="!isAuthenticated()">Đăng nhập</a>
-            <a th:href="@{/profile}" class="btn btn-outline-primary" sec:authorize="isAuthenticated()">Profile</a>
+            <a th:href="@{/teams}" class="btn btn-primary" th:text="#{home.viewTeams}">View teams</a>
+            <a th:href="@{/login}" class="btn btn-outline-primary" sec:authorize="!isAuthenticated()" th:text="#{nav.login}">Sign in</a>
+            <a th:href="@{/profile}" class="btn btn-outline-primary" sec:authorize="isAuthenticated()" th:text="#{nav.profile}">Profile</a>
         </div>
     </div>
 </div>

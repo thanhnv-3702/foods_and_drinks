@@ -2,13 +2,13 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Position Form - Admin</title>
+    <title th:text="${positionForm.id != null} ? |#{page.position.edit} - #{nav.admin}| : |#{page.position.create} - #{nav.admin}|">Position Form - Admin</title>
 </head>
 <body>
 <div id="admin-content">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0" th:text="${positionForm.id} != null ? 'Sửa Position' : 'Tạo Position'">Position</h2>
-        <a th:href="@{/admin/positions}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+        <h2 class="h5 mb-0" th:text="${positionForm.id} != null ? #{page.position.edit} : #{page.position.create}">Position</h2>
+        <a th:href="@{/admin/positions}" class="btn btn-outline-secondary btn-sm" th:text="'&larr; ' + #{common.back}">&larr; Back</a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -17,19 +17,19 @@
                   method="post" th:object="${positionForm}" novalidate>
                 <div th:replace="~{fragments/form-validation :: summary}"></div>
                 <div class="mb-3">
-                    <label for="name" class="form-label">Tên vị trí <span class="text-danger">*</span></label>
+                    <label for="name" class="form-label"><span th:text="#{admin.form.position.name}">Position name</span> <span class="text-danger">*</span></label>
                     <input type="text" id="name" class="form-control" th:field="*{name}"
                            th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Lỗi</div>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                 </div>
                 <div class="mb-3">
-                    <label for="abbreviation" class="form-label">Tên viết tắt</label>
+                    <label for="abbreviation" class="form-label" th:text="#{admin.form.position.abbr}">Abbreviation</label>
                     <input type="text" id="abbreviation" class="form-control" th:field="*{abbreviation}"
                            th:classappend="${#fields.hasErrors('abbreviation')} ? 'is-invalid'">
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('abbreviation')}"
-                         th:errors="*{abbreviation}">Lỗi</div>
+                         th:errors="*{abbreviation}"></div>
                 </div>
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary" th:text="#{common.save}">Save</button>
             </form>
         </div>
     </div>

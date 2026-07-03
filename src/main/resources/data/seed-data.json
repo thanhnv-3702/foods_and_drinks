@@ -1,0 +1,113 @@
+{
+  "markerEmail": "demo_a@slearn.local",
+  "demoPassword": "User@12345",
+  "accounts": [
+    {
+      "name": "System Admin",
+      "email": "admin@slearn.local",
+      "password": "Admin@12345",
+      "role": "ADMIN"
+    },
+    {
+      "name": "Demo User",
+      "email": "user@slearn.local",
+      "password": "User@12345",
+      "role": "USER"
+    }
+  ],
+  "positions": [
+    { "name": "Backend Developer", "abbreviation": "BE" },
+    { "name": "Frontend Developer", "abbreviation": "FE" },
+    { "name": "QA Engineer", "abbreviation": "QA" },
+    { "name": "Project Manager", "abbreviation": "PM" }
+  ],
+  "users": [
+    {
+      "key": "userA",
+      "name": "Nguyen Van A",
+      "email": "demo_a@slearn.local",
+      "birthday": "1992-03-15",
+      "role": "USER"
+    },
+    {
+      "key": "userB",
+      "name": "Tran Thi B",
+      "email": "demo_b@slearn.local",
+      "birthday": "1994-07-20",
+      "role": "USER"
+    },
+    {
+      "key": "userC",
+      "name": "Le Van C",
+      "email": "demo_c@slearn.local",
+      "birthday": "1993-11-08",
+      "role": "USER"
+    },
+    {
+      "key": "userD",
+      "name": "Pham Thi D",
+      "email": "demo_d@slearn.local",
+      "birthday": "1990-01-25",
+      "role": "USER"
+    },
+    {
+      "key": "userE",
+      "name": "Hoang Van E",
+      "email": "demo_e@slearn.local",
+      "birthday": "1996-09-12",
+      "role": "USER"
+    }
+  ],
+  "teams": [
+    {
+      "key": "teamAlpha",
+      "name": "Team Alpha",
+      "description": "Nhóm phát triển web",
+      "leaderKey": "userA"
+    },
+    {
+      "key": "teamBeta",
+      "name": "Team Beta",
+      "description": "Nhóm phát triển mobile",
+      "leaderKey": "userD"
+    }
+  ],
+  "teamAssignments": [
+    { "userKey": "userA", "teamKey": "teamAlpha", "positionName": "Backend Developer", "joinedAtOffsetDays": 0 },
+    { "userKey": "userB", "teamKey": "teamAlpha", "positionName": "Frontend Developer", "joinedAtOffsetDays": 5 },
+    { "userKey": "userC", "teamKey": "teamBeta", "positionName": "Backend Developer", "joinedAtOffsetDays": 10 },
+    { "userKey": "userD", "teamKey": "teamBeta", "positionName": "Project Manager", "joinedAtOffsetDays": 0 },
+    { "userKey": "userE", "teamKey": "teamBeta", "positionName": "QA Engineer", "joinedAtOffsetDays": 15 }
+  ],
+  "skills": [
+    { "userKey": "userA", "name": "Java", "level": "Advanced", "usedYearNumber": 5 },
+    { "userKey": "userA", "name": "Spring Boot", "level": "Advanced", "usedYearNumber": 4 },
+    { "userKey": "userB", "name": "React", "level": "Intermediate", "usedYearNumber": 3 },
+    { "userKey": "userB", "name": "TypeScript", "level": "Intermediate", "usedYearNumber": 2 },
+    { "userKey": "userC", "name": "Kotlin", "level": "Intermediate", "usedYearNumber": 2 },
+    { "userKey": "userD", "name": "Agile", "level": "Intermediate", "usedYearNumber": 4 },
+    { "userKey": "userE", "name": "Selenium", "level": "Beginner", "usedYearNumber": 1 }
+  ],
+  "projects": [
+    {
+      "key": "projWeb",
+      "name": "Website Bán Hàng",
+      "abbreviation": "WEB",
+      "startDate": "2026-01-05",
+      "endDate": "2026-08-30",
+      "teamKey": "teamAlpha",
+      "leaderKey": "userA",
+      "memberKeys": ["userA", "userB"]
+    },
+    {
+      "key": "projApp",
+      "name": "App Mobile Giao Hàng",
+      "abbreviation": "APP",
+      "startDate": "2026-03-01",
+      "endDate": "2026-12-31",
+      "teamKey": "teamBeta",
+      "leaderKey": "userD",
+      "memberKeys": ["userC", "userD", "userE"]
+    }
+  ]
+}

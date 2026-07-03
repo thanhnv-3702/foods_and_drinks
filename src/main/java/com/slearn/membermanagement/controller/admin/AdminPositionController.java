@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
 import com.slearn.membermanagement.dto.PositionForm;
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.PositionService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminPositionController {
 
     private final PositionService positionService;
+    private final MessageService messages;
 
-    public AdminPositionController(PositionService positionService) {
+    public AdminPositionController(PositionService positionService, MessageService messages) {
         this.positionService = positionService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -35,7 +38,7 @@ public class AdminPositionController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<?> positions = positionService.findAll(pageable);
         model.addAttribute("positions", positions);
-        model.addAttribute("pageTitle", "Positions");
+        model.addAttribute("pageTitle", messages.get("page.positions"));
         model.addAttribute("activeMenu", "positions");
         return "admin/positions/list";
     }
@@ -43,7 +46,7 @@ public class AdminPositionController {
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("positionForm", new PositionForm());
-        model.addAttribute("pageTitle", "Tạo Position");
+        model.addAttribute("pageTitle", messages.get("page.position.create"));
         model.addAttribute("activeMenu", "positions");
         return "admin/positions/form";
     }
@@ -54,19 +57,19 @@ public class AdminPositionController {
                          Model model,
                          RedirectAttributes ra) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("pageTitle", "Tạo Position");
+            model.addAttribute("pageTitle", messages.get("page.position.create"));
             model.addAttribute("activeMenu", "positions");
             return "admin/positions/form";
         }
         positionService.create(form);
-        ra.addFlashAttribute("successMessage", "Đã tạo vị trí thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.position.created"));
         return "redirect:/admin/positions";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("positionForm", positionService.getFormById(id));
-        model.addAttribute("pageTitle", "Sửa Position");
+        model.addAttribute("pageTitle", messages.get("page.position.edit"));
         model.addAttribute("activeMenu", "positions");
         return "admin/positions/form";
     }
@@ -78,19 +81,19 @@ public class AdminPositionController {
                          Model model,
                          RedirectAttributes ra) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("pageTitle", "Sửa Position");
+            model.addAttribute("pageTitle", messages.get("page.position.edit"));
             model.addAttribute("activeMenu", "positions");
             return "admin/positions/form";
         }
         positionService.update(id, form);
-        ra.addFlashAttribute("successMessage", "Đã cập nhật vị trí thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.position.updated"));
         return "redirect:/admin/positions";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes ra) {
         positionService.delete(id);
-        ra.addFlashAttribute("successMessage", "Đã xóa vị trí.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.position.deleted"));
         return "redirect:/admin/positions";
     }
 }

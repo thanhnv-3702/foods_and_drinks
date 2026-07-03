@@ -15,10 +15,12 @@ import com.slearn.membermanagement.repository.SkillRepository;
 import com.slearn.membermanagement.repository.TeamRepository;
 import com.slearn.membermanagement.repository.UserRepository;
 import com.slearn.membermanagement.support.TestEntityFactory;
+import com.slearn.membermanagement.support.TestMessageSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
@@ -52,6 +54,9 @@ class CsvExportServiceTest {
 
     @Mock
     private ActivityLogRepository activityLogRepository;
+
+    @Spy
+    private MessageService messages = TestMessageSupport.vietnamese();
 
     @InjectMocks
     private CsvExportService csvExportService;

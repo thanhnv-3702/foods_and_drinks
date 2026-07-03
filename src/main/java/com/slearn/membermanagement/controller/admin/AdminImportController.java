@@ -2,6 +2,7 @@ package com.slearn.membermanagement.controller.admin;
 
 import com.slearn.membermanagement.dto.ImportResult;
 import com.slearn.membermanagement.service.CsvImportService;
+import com.slearn.membermanagement.service.MessageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +18,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminImportController {
 
     private final CsvImportService csvImportService;
+    private final MessageService messages;
 
-    public AdminImportController(CsvImportService csvImportService) {
+    public AdminImportController(CsvImportService csvImportService, MessageService messages) {
         this.csvImportService = csvImportService;
+        this.messages = messages;
     }
 
     @GetMapping
     public String page(Model model) {
-        model.addAttribute("pageTitle", "Import CSV");
+        model.addAttribute("pageTitle", messages.get("page.import"));
         model.addAttribute("activeMenu", "import");
         return "admin/import/index";
     }
@@ -34,7 +37,7 @@ public class AdminImportController {
                                @RequestParam("file") MultipartFile file,
                                RedirectAttributes ra) {
         if (file == null || file.isEmpty()) {
-            ra.addFlashAttribute("errorMessage", "Vui lòng chọn file CSV.");
+            ra.addFlashAttribute("errorMessage", messages.get("flash.import.noFile"));
             return "redirect:/admin/import";
         }
         try {
@@ -47,13 +50,13 @@ public class AdminImportController {
                 default -> null;
             };
             if (result == null) {
-                ra.addFlashAttribute("errorMessage", "Đối tượng không hợp lệ: " + entity);
+                ra.addFlashAttribute("errorMessage", messages.get("flash.import.invalidEntity", entity));
             } else {
                 ra.addFlashAttribute("importResult", result);
                 ra.addFlashAttribute("importEntity", entity);
             }
         } catch (Exception ex) {
-            ra.addFlashAttribute("errorMessage", "Lỗi đọc file: " + ex.getMessage());
+            ra.addFlashAttribute("errorMessage", messages.get("flash.import.readError", ex.getMessage()));
         }
         return "redirect:/admin/import";
     }

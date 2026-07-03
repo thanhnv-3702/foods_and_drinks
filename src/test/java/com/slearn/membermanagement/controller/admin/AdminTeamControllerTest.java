@@ -56,7 +56,7 @@ class AdminTeamControllerTest extends WebMvcTestBase {
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/teams/form"))
                 .andExpect(model().attributeExists("teamForm"))
-                .andExpect(model().attribute("pageTitle", "Tạo Team"));
+                .andExpect(model().attribute("pageTitle", "Create team"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class AdminTeamControllerTest extends WebMvcTestBase {
         mockMvc.perform(post("/admin/teams").param("name", "Alpha"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/teams"))
-                .andExpect(flash().attribute("successMessage", "Đã tạo team thành công."));
+                .andExpect(flash().attribute("successMessage", "Team created successfully."));
 
         verify(teamService).create(any(TeamForm.class));
     }
@@ -76,7 +76,7 @@ class AdminTeamControllerTest extends WebMvcTestBase {
         mockMvc.perform(post("/admin/teams").param("name", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/teams/form"))
-                .andExpect(model().attribute("pageTitle", "Tạo Team"));
+                .andExpect(model().attribute("pageTitle", "Create team"));
     }
 
     @Test
@@ -88,7 +88,7 @@ class AdminTeamControllerTest extends WebMvcTestBase {
         mockMvc.perform(get("/admin/teams/1/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/teams/form"))
-                .andExpect(model().attribute("pageTitle", "Sửa Team"));
+                .andExpect(model().attribute("pageTitle", "Edit team"));
     }
 
     @Test
@@ -97,7 +97,7 @@ class AdminTeamControllerTest extends WebMvcTestBase {
                         .param("name", "Beta")
                         .param("description", "Updated"))
                 .andExpect(redirectedUrl("/admin/teams"))
-                .andExpect(flash().attribute("successMessage", "Đã cập nhật team thành công."));
+                .andExpect(flash().attribute("successMessage", "Team updated successfully."));
 
         verify(teamService).update(eq(2L), any(TeamForm.class));
     }
@@ -109,7 +109,7 @@ class AdminTeamControllerTest extends WebMvcTestBase {
         mockMvc.perform(post("/admin/teams/2").param("name", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/teams/form"))
-                .andExpect(model().attribute("pageTitle", "Sửa Team"));
+                .andExpect(model().attribute("pageTitle", "Edit team"));
     }
 
     @Test
@@ -118,15 +118,15 @@ class AdminTeamControllerTest extends WebMvcTestBase {
 
         mockMvc.perform(post("/admin/teams/1/delete"))
                 .andExpect(redirectedUrl("/admin/teams"))
-                .andExpect(flash().attribute("successMessage", "Đã xóa team."));
+                .andExpect(flash().attribute("successMessage", "Team deleted."));
     }
 
     @Test
     void delete_withMembers_showsErrorFlash() throws Exception {
-        when(teamService.delete(2L)).thenReturn("Không thể xóa team");
+        when(teamService.delete(2L)).thenReturn("Cannot delete team");
 
         mockMvc.perform(post("/admin/teams/2/delete"))
                 .andExpect(redirectedUrl("/admin/teams"))
-                .andExpect(flash().attribute("errorMessage", "Không thể xóa team"));
+                .andExpect(flash().attribute("errorMessage", "Cannot delete team"));
     }
 }

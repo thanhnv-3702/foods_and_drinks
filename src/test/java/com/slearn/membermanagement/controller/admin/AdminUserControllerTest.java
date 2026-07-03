@@ -150,7 +150,7 @@ class AdminUserControllerTest extends WebMvcTestBase {
 
         mockMvc.perform(post("/admin/users/5/delete"))
                 .andExpect(redirectedUrl("/admin/users"))
-                .andExpect(flash().attribute("successMessage", "Đã xóa người dùng."));
+                .andExpect(flash().attribute("successMessage", "User deleted."));
     }
 
     @Test

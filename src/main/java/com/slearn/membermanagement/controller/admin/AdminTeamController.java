@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
 import com.slearn.membermanagement.dto.TeamForm;
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.TeamService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminTeamController {
 
     private final TeamService teamService;
+    private final MessageService messages;
 
-    public AdminTeamController(TeamService teamService) {
+    public AdminTeamController(TeamService teamService, MessageService messages) {
         this.teamService = teamService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -35,7 +38,7 @@ public class AdminTeamController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<?> teams = teamService.findAll(pageable);
         model.addAttribute("teams", teams);
-        model.addAttribute("pageTitle", "Teams");
+        model.addAttribute("pageTitle", messages.get("page.teams"));
         model.addAttribute("activeMenu", "teams");
         return "admin/teams/list";
     }
@@ -44,7 +47,7 @@ public class AdminTeamController {
     public String createForm(Model model) {
         model.addAttribute("teamForm", new TeamForm());
         model.addAttribute("users", teamService.findAllUsers());
-        model.addAttribute("pageTitle", "Tạo Team");
+        model.addAttribute("pageTitle", messages.get("page.team.create"));
         model.addAttribute("activeMenu", "teams");
         return "admin/teams/form";
     }
@@ -56,12 +59,12 @@ public class AdminTeamController {
                          RedirectAttributes ra) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("users", teamService.findAllUsers());
-            model.addAttribute("pageTitle", "Tạo Team");
+            model.addAttribute("pageTitle", messages.get("page.team.create"));
             model.addAttribute("activeMenu", "teams");
             return "admin/teams/form";
         }
         teamService.create(form);
-        ra.addFlashAttribute("successMessage", "Đã tạo team thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.team.created"));
         return "redirect:/admin/teams";
     }
 
@@ -69,7 +72,7 @@ public class AdminTeamController {
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("teamForm", teamService.getFormById(id));
         model.addAttribute("users", teamService.findAllUsers());
-        model.addAttribute("pageTitle", "Sửa Team");
+        model.addAttribute("pageTitle", messages.get("page.team.edit"));
         model.addAttribute("activeMenu", "teams");
         return "admin/teams/form";
     }
@@ -82,12 +85,12 @@ public class AdminTeamController {
                          RedirectAttributes ra) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("users", teamService.findAllUsers());
-            model.addAttribute("pageTitle", "Sửa Team");
+            model.addAttribute("pageTitle", messages.get("page.team.edit"));
             model.addAttribute("activeMenu", "teams");
             return "admin/teams/form";
         }
         teamService.update(id, form);
-        ra.addFlashAttribute("successMessage", "Đã cập nhật team thành công.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.team.updated"));
         return "redirect:/admin/teams";
     }
 
@@ -97,7 +100,7 @@ public class AdminTeamController {
         if (error != null) {
             ra.addFlashAttribute("errorMessage", error);
         } else {
-            ra.addFlashAttribute("successMessage", "Đã xóa team.");
+            ra.addFlashAttribute("successMessage", messages.get("flash.team.deleted"));
         }
         return "redirect:/admin/teams";
     }

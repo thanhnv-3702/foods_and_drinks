@@ -2,18 +2,18 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Activity Logs - Admin</title>
+    <title th:text="|#{page.activityLogs} - #{nav.admin}|">Activity Logs - Admin</title>
 </head>
 <body>
 <div id="admin-content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Nhật ký hoạt động</h2>
+        <h2 class="h5 mb-0" th:text="#{admin.list.activityLogs}">Activity logs</h2>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/export/activity-logs.csv}" class="btn btn-outline-success btn-sm">Export CSV</a>
+            <a th:href="@{/admin/export/activity-logs.csv}" class="btn btn-outline-success btn-sm" th:text="#{admin.export.csv}">Export CSV</a>
             <form th:action="@{/admin/activity-logs/clear}" method="post"
-                  onsubmit="return confirm('Xóa toàn bộ nhật ký?');" th:if="${!logs.empty}">
-                <button type="submit" class="btn btn-outline-danger btn-sm">Xóa tất cả</button>
+                  th:attr="onsubmit=|return confirm('#{admin.confirm.clearLogs}');|" th:if="${!logs.empty}">
+                <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{admin.logs.deleteAll}">Delete all</button>
             </form>
         </div>
     </div>
@@ -23,12 +23,12 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th style="width: 70px;">ID</th>
-                    <th style="width: 170px;">Thời gian</th>
-                    <th style="width: 160px;">Hành động</th>
-                    <th>Mô tả</th>
-                    <th>Người thực hiện</th>
-                    <th style="width: 90px;" class="text-end">Thao tác</th>
+                    <th style="width: 70px;" th:text="#{col.id}">ID</th>
+                    <th style="width: 170px;" th:text="#{admin.logs.time}">Time</th>
+                    <th style="width: 160px;" th:text="#{admin.logs.action}">Action</th>
+                    <th th:text="#{admin.logs.description}">Description</th>
+                    <th th:text="#{admin.logs.actor}">Actor</th>
+                    <th style="width: 90px;" class="text-end" th:text="#{common.actions}">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -37,16 +37,16 @@
                     <td th:text="${#temporals.format(log.createdAt, 'dd/MM/yyyy HH:mm:ss')}">--</td>
                     <td><span class="badge bg-secondary" th:text="${log.action}">ACTION</span></td>
                     <td th:text="${log.description}">desc</td>
-                    <td th:text="${log.user != null ? log.user.name : 'Hệ thống'}">user</td>
+                    <td th:text="${log.user != null ? log.user.name : #messages.msg('notification.actor.system')}">user</td>
                     <td class="text-end">
                         <form th:action="@{/admin/activity-logs/{id}/delete(id=${log.id})}" method="post"
-                              onsubmit="return confirm('Xóa log này?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                              th:attr="onsubmit=|return confirm('#{admin.confirm.deleteLog}');|">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{common.delete}">Delete</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${logs.empty}">
-                    <td colspan="6" class="text-center text-muted py-4">Chưa có log nào.</td>
+                    <td colspan="6" class="text-center text-muted py-4" th:text="#{admin.empty.logs}">No log entries yet.</td>
                 </tr>
                 </tbody>
             </table>
@@ -54,7 +54,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
-        <span class="text-muted small" th:text="|Tổng: ${logs.totalElements} log|">Tổng: 0</span>
+        <span class="text-muted small" th:text="#{admin.total.logs(${logs.totalElements})}">Total: 0</span>
         <div th:replace="~{fragments/pagination :: pager(${logs}, '/admin/activity-logs')}"></div>
     </div>
 </div>

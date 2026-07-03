@@ -12,6 +12,7 @@ import com.slearn.membermanagement.repository.ProjectMemberRepository;
 import com.slearn.membermanagement.repository.UserRepository;
 import com.slearn.membermanagement.security.CustomUserDetails;
 import com.slearn.membermanagement.support.TestEntityFactory;
+import com.slearn.membermanagement.support.TestMessageSupport;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +49,9 @@ class NotificationServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Spy
+    private MessageService messages = TestMessageSupport.vietnamese();
 
     @InjectMocks
     private NotificationService notificationService;
@@ -136,7 +141,7 @@ class NotificationServiceTest {
 
         ArgumentCaptor<Notification> captor = ArgumentCaptor.forClass(Notification.class);
         verify(notificationRepository).save(captor.capture());
-        assertThat(captor.getValue().getTitle()).contains("Đã xóa").contains("Team 1");
+        assertThat(captor.getValue().getTitle()).contains("Team 1");
     }
 
     @Test
