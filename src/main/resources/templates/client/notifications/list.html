@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/client :: layout(~{::title}, ~{::#client-content})}">
+<head>
+    <title>Notifications - Member Management</title>
+</head>
+<body>
+<div id="client-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Notifications</h1>
+        <span class="badge bg-danger" th:text="'Unread: ' + ${unreadCount}">Unread: 0</span>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body d-flex flex-wrap gap-2">
+            <a class="btn btn-sm"
+               th:classappend="${selectedRead == null} ? ' btn-primary' : ' btn-outline-primary'"
+               th:href="@{/notifications}">Tất cả</a>
+            <a class="btn btn-sm"
+               th:classappend="${selectedRead == false} ? ' btn-primary' : ' btn-outline-primary'"
+               th:href="@{/notifications(read=false)}">Chưa đọc</a>
+            <a class="btn btn-sm"
+               th:classappend="${selectedRead == true} ? ' btn-primary' : ' btn-outline-primary'"
+               th:href="@{/notifications(read=true)}">Đã đọc</a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Trạng thái</th>
+                    <th>Tiêu đề</th>
+                    <th>Loại</th>
+                    <th>Action</th>
+                    <th>Thời gian</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="n : ${notifications.content}">
+                    <td>
+                        <span class="badge" th:classappend="${n.read} ? 'bg-secondary' : 'bg-danger'"
+                              th:text="${n.read} ? 'Đã đọc' : 'Chưa đọc'">Chưa đọc</span>
+                    </td>
+                    <td th:text="${n.title}">Title</td>
+                    <td th:text="${n.type}">TEAM</td>
+                    <td th:text="${n.action}">UPDATE</td>
+                    <td th:text="${#temporals.format(n.createdAt, 'dd/MM/yyyy HH:mm')}">--/--</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{|/notifications/${n.id}|}">Chi tiết</a>
+                    </td>
+                </tr>
+                <tr th:if="${notifications.totalElements == 0}">
+                    <td colspan="6" class="text-center text-muted py-4">Không có notification.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav class="mt-3" th:if="${notifications.totalPages > 1}">
+        <ul class="pagination justify-content-center mb-0">
+            <li class="page-item" th:classappend="${notifications.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/notifications(page=${notifications.number - 1}, size=${notifications.size}, read=${selectedRead})}">Previous</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" th:text="${notifications.number + 1} + ' / ' + ${notifications.totalPages}">1 / 1</span>
+            </li>
+            <li class="page-item" th:classappend="${notifications.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/notifications(page=${notifications.number + 1}, size=${notifications.size}, read=${selectedRead})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
