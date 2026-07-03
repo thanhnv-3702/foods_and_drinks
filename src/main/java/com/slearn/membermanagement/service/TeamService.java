@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.service;
 
 import com.slearn.membermanagement.dto.TeamForm;
+import com.slearn.membermanagement.entity.NotificationAction;
 import com.slearn.membermanagement.entity.Team;
 import com.slearn.membermanagement.entity.User;
 import com.slearn.membermanagement.repository.TeamRepository;
@@ -19,12 +20,15 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final ActivityLogService activityLogService;
+    private final NotificationService notificationService;
 
     public TeamService(TeamRepository teamRepository, UserRepository userRepository,
-                       ActivityLogService activityLogService) {
+                       ActivityLogService activityLogService,
+                       NotificationService notificationService) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.activityLogService = activityLogService;
+        this.notificationService = notificationService;
     }
 
     @Transactional(readOnly = true)
@@ -62,6 +66,7 @@ public class TeamService {
                 .leader(resolveLeader(form.getLeaderId()))
                 .build();
         teamRepository.save(team);
+        notificationService.notifyTeamCrud(team, NotificationAction.CREATE);
         activityLogService.record("CREATE_TEAM",
                 "Tạo team '" + team.getName() + "' (id=" + team.getId() + ")");
         return team;
@@ -74,6 +79,7 @@ public class TeamService {
         team.setDescription(form.getDescription());
         team.setLeader(resolveLeader(form.getLeaderId()));
         teamRepository.save(team);
+        notificationService.notifyTeamCrud(team, NotificationAction.UPDATE);
         activityLogService.record("UPDATE_TEAM",
                 "Cập nhật team '" + team.getName() + "' (id=" + team.getId() + ")");
         return team;
@@ -90,6 +96,7 @@ public class TeamService {
         if (memberCount > 0) {
             return "Không thể xóa team \"" + team.getName() + "\" vì còn " + memberCount + " thành viên.";
         }
+        notificationService.notifyTeamCrud(team, NotificationAction.DELETE);
         teamRepository.delete(team);
         activityLogService.record("DELETE_TEAM",
                 "Xóa team '" + team.getName() + "' (id=" + id + ")");
