@@ -3,6 +3,7 @@ package com.slearn.membermanagement.controller.admin;
 import com.slearn.membermanagement.support.WebMvcTestBase;
 
 import com.slearn.membermanagement.dto.UserForm;
+import com.slearn.membermanagement.entity.Role;
 import com.slearn.membermanagement.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,69 @@ class AdminUserControllerTest extends WebMvcTestBase {
 
     @MockBean
     private UserService userService;
+
+    @Test
+    void createForm_returnsFormView() throws Exception {
+        when(userService.findAllTeams()).thenReturn(List.of());
+        when(userService.findAllPositions()).thenReturn(List.of());
+
+        mockMvc.perform(get("/admin/users/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users/form"));
+    }
+
+    @Test
+    void editForm_returnsFormView() throws Exception {
+        when(userService.getFormById(1L)).thenReturn(UserForm.builder().id(1L).role(Role.USER).build());
+        when(userService.findAllTeams()).thenReturn(List.of());
+        when(userService.findAllPositions()).thenReturn(List.of());
+
+        mockMvc.perform(get("/admin/users/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users/form"));
+    }
+
+    @Test
+    void create_shortPassword_returnsForm() throws Exception {
+        when(userService.findAllTeams()).thenReturn(List.of());
+        when(userService.findAllPositions()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/users")
+                        .param("name", "Alice")
+                        .param("email", "alice@test.local")
+                        .param("password", "123")
+                        .param("role", "USER"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users/form"));
+    }
+
+    @Test
+    void update_duplicateEmail_returnsForm() throws Exception {
+        when(userService.emailExists("dup@test.local", 3L)).thenReturn(true);
+        when(userService.findAllTeams()).thenReturn(List.of());
+        when(userService.findAllPositions()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/users/3")
+                        .param("name", "Carol")
+                        .param("email", "dup@test.local")
+                        .param("role", "USER"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users/form"));
+    }
+
+    @Test
+    void update_shortPassword_returnsForm() throws Exception {
+        when(userService.findAllTeams()).thenReturn(List.of());
+        when(userService.findAllPositions()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/users/3")
+                        .param("name", "Carol")
+                        .param("email", "carol@test.local")
+                        .param("password", "123")
+                        .param("role", "USER"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/users/form"));
+    }
 
     @Test
     void list_returnsListView() throws Exception {
