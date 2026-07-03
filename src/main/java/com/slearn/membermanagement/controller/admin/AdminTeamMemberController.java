@@ -33,8 +33,12 @@ public class AdminTeamMemberController {
 
     @PostMapping("/add")
     public String addMember(@PathVariable Long teamId,
-                            @RequestParam Long userId,
+                            @RequestParam(required = false) Long userId,
                             RedirectAttributes ra) {
+        if (userId == null) {
+            ra.addFlashAttribute("errorMessage", "Vui lòng chọn thành viên.");
+            return "redirect:/admin/teams/" + teamId + "/members";
+        }
         teamMemberService.addOrMoveMember(teamId, userId);
         ra.addFlashAttribute("successMessage", "Đã thêm/di chuyển thành viên vào team.");
         return "redirect:/admin/teams/" + teamId + "/members";
