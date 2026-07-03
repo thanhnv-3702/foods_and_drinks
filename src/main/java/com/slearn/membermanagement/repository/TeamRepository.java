@@ -16,4 +16,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     @EntityGraph(attributePaths = "leader")
     Optional<Team> findWithLeaderById(Long id);
+
+    Optional<Team> findFirstByNameIgnoreCase(String name);
 }

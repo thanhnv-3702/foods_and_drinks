@@ -26,6 +26,15 @@
                     <a class="nav-link" th:href="@{/profile}"
                        th:classappend="${activeMenu == 'profile'} ? ' active' : ''">Profile</a>
                 </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/notifications}"
+                       th:classappend="${activeMenu == 'notifications'} ? ' active' : ''">
+                        Notifications
+                        <span class="badge rounded-pill bg-danger ms-1"
+                              th:if="${unreadNotificationCount > 0}"
+                              th:text="${unreadNotificationCount}">0</span>
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav align-items-lg-center gap-lg-1">
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">

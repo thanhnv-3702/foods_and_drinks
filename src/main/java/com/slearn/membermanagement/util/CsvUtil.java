@@ -1,5 +1,6 @@
 package com.slearn.membermanagement.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,5 +42,62 @@ public final class CsvUtil {
             return "\"" + v.replace("\"", "\"\"") + "\"";
         }
         return v;
+    }
+
+    /**
+     * Parse nội dung CSV (RFC 4180) thành danh sách các dòng (mỗi dòng là list field).
+     * Hỗ trợ field có dấu ngoặc kép, dấu phẩy/xuống dòng bên trong, và BOM UTF-8.
+     */
+    public static List<List<String>> parse(String content) {
+        List<List<String>> rows = new ArrayList<>();
+        if (content == null || content.isEmpty()) {
+            return rows;
+        }
+        if (content.startsWith(BOM)) {
+            content = content.substring(BOM.length());
+        }
+        List<String> current = new ArrayList<>();
+        StringBuilder field = new StringBuilder();
+        boolean inQuotes = false;
+        int n = content.length();
+        for (int i = 0; i < n; i++) {
+            char c = content.charAt(i);
+            if (inQuotes) {
+                if (c == '"') {
+                    if (i + 1 < n && content.charAt(i + 1) == '"') {
+                        field.append('"');
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    field.append(c);
+                }
+            } else {
+                switch (c) {
+                    case '"' -> inQuotes = true;
+                    case ',' -> {
+                        current.add(field.toString());
+                        field.setLength(0);
+                    }
+                    case '\r' -> {
+                        // bỏ qua, xử lý ở '\n'
+                    }
+                    case '\n' -> {
+                        current.add(field.toString());
+                        field.setLength(0);
+                        rows.add(current);
+                        current = new ArrayList<>();
+                    }
+                    default -> field.append(c);
+                }
+            }
+        }
+        // dòng cuối không kết thúc bằng newline
+        if (field.length() > 0 || !current.isEmpty()) {
+            current.add(field.toString());
+            rows.add(current);
+        }
+        return rows;
     }
 }

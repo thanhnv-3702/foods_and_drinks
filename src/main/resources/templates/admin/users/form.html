@@ -15,6 +15,7 @@
         <div class="card-body">
             <form th:action="${userForm.id} != null ? @{/admin/users/{id}(id=${userForm.id})} : @{/admin/users}"
                   method="post" th:object="${userForm}" novalidate>
+                <div th:replace="~{fragments/form-validation :: summary}"></div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="name" class="form-label">Họ tên <span class="text-danger">*</span></label>

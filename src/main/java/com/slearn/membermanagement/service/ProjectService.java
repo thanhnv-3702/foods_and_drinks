@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.service;
 
 import com.slearn.membermanagement.dto.ProjectForm;
+import com.slearn.membermanagement.entity.NotificationAction;
 import com.slearn.membermanagement.entity.Project;
 import com.slearn.membermanagement.entity.ProjectMember;
 import com.slearn.membermanagement.entity.Team;
@@ -31,17 +32,20 @@ public class ProjectService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final ActivityLogService activityLogService;
+    private final NotificationService notificationService;
 
     public ProjectService(ProjectRepository projectRepository,
                           ProjectMemberRepository projectMemberRepository,
                           TeamRepository teamRepository,
                           UserRepository userRepository,
-                          ActivityLogService activityLogService) {
+                          ActivityLogService activityLogService,
+                          NotificationService notificationService) {
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.activityLogService = activityLogService;
+        this.notificationService = notificationService;
     }
 
     @Transactional(readOnly = true)
@@ -107,6 +111,7 @@ public class ProjectService {
                 .build();
         project = projectRepository.save(project);
         syncMembers(project, form.getMemberIds());
+        notificationService.notifyProjectCrud(project, NotificationAction.CREATE);
         activityLogService.record("CREATE_PROJECT",
                 "Tạo dự án '" + project.getName() + "' (id=" + project.getId() + ")");
         return project;
@@ -123,6 +128,7 @@ public class ProjectService {
         project.setLeader(resolveUser(form.getLeaderId()));
         projectRepository.save(project);
         syncMembers(project, form.getMemberIds());
+        notificationService.notifyProjectCrud(project, NotificationAction.UPDATE);
         activityLogService.record("UPDATE_PROJECT",
                 "Cập nhật dự án '" + project.getName() + "' (id=" + project.getId() + ")");
         return project;
@@ -134,6 +140,7 @@ public class ProjectService {
     @Transactional
     public void delete(Long id) {
         Project project = getById(id);
+        notificationService.notifyProjectCrud(project, NotificationAction.DELETE);
         projectMemberRepository.deleteByProjectId(id);
         projectRepository.delete(project);
         activityLogService.record("DELETE_PROJECT",

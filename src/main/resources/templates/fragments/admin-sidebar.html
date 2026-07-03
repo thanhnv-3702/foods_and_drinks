@@ -38,6 +38,10 @@
       <a th:href="@{/admin/activity-logs}" class="nav-link"
          th:classappend="${activeMenu == 'activity-logs'} ? 'active' : ''">Activity Logs</a>
     </li>
+    <li>
+      <a th:href="@{/admin/import}" class="nav-link text-white"
+         th:classappend="${activeMenu == 'import'} ? 'active' : 'link-dark'">Import CSV</a>
+    </li>
   </ul>
   <hr>
   <div>

@@ -15,6 +15,7 @@
         <div class="card-body">
             <form th:action="${projectForm.id} != null ? @{/admin/projects/{id}(id=${projectForm.id})} : @{/admin/projects}"
                   method="post" th:object="${projectForm}" novalidate>
+                <div th:replace="~{fragments/form-validation :: summary}"></div>
                 <div class="row">
                     <div class="col-md-8 mb-3">
                         <label for="name" class="form-label">Tên dự án <span class="text-danger">*</span></label>
