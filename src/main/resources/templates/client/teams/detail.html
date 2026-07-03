@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/client :: layout(~{::title}, ~{::#client-content})}">
+<head>
+    <title>Chi tiết Team - Member Management</title>
+</head>
+<body>
+<div id="client-content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/teams}">Teams</a></li>
+            <li class="breadcrumb-item active" th:text="${team.name}">Team</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h1 class="h4" th:text="${team.name}">Team</h1>
+            <p class="text-muted mb-2"
+               th:text="${team.description != null and !team.description.isEmpty()} ? ${team.description} : 'Không có mô tả'">desc</p>
+            <span class="badge bg-light text-dark border">
+                Leader: <span th:text="${team.leader != null ? team.leader.name : 'Chưa có'}">-</span>
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+                    <span>Thành viên (<span th:text="${#lists.size(members)}">0</span>)</span>
+                    <a th:href="@{/teams/{id}/members(id=${team.id})}" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table mb-0 align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Vị trí</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="m : ${members}">
+                            <td>
+                                <a th:href="@{/members/{id}(id=${m.id})}" class="text-decoration-none"
+                                   th:text="${m.name}">Name</a>
+                            </td>
+                            <td th:text="${m.email}">email</td>
+                            <td th:text="${m.position != null ? m.position.name : '-'}">-</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(members)}">
+                            <td colspan="3" class="text-center text-muted py-3">Team chưa có thành viên.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white fw-semibold">
+                    Dự án (<span th:text="${#lists.size(projects)}">0</span>)
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="p : ${projects}">
+                            <div class="fw-semibold" th:text="${p.name}">Project</div>
+                            <div class="small text-muted">
+                                <span th:if="${p.abbreviation != null}" th:text="${p.abbreviation} + ' · '">PX · </span>
+                                <span th:text="${p.startDate != null ? #temporals.format(p.startDate, 'dd/MM/yyyy') : '?'}">-</span>
+                                →
+                                <span th:text="${p.endDate != null ? #temporals.format(p.endDate, 'dd/MM/yyyy') : '?'}">-</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(projects)}">
+                            Chưa có dự án.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/teams}" class="btn btn-outline-secondary btn-sm mt-4">&larr; Quay lại danh sách</a>
+</div>
+</body>
+</html>

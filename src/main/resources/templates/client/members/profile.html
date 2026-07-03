@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/client :: layout(~{::title}, ~{::#client-content})}">
+<head>
+    <title>Hồ sơ thành viên - Member Management</title>
+</head>
+<body>
+<div id="client-content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/teams}">Teams</a></li>
+            <li class="breadcrumb-item"
+                th:if="${profile.teamName != null}" th:text="${profile.teamName}">Team</li>
+            <li class="breadcrumb-item active" th:text="${profile.name}">Member</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 80px; height: 80px; font-size: 2rem;"
+                         th:text="${#strings.isEmpty(profile.name)} ? '?' : ${#strings.substring(profile.name,0,1)}">A</div>
+                    <h1 class="h5 mb-1" th:text="${profile.name}">Tên</h1>
+                    <p class="text-muted small mb-2" th:text="${profile.email}">email</p>
+                    <ul class="list-group list-group-flush mt-3 text-start">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Ngày sinh</span>
+                            <span th:text="${profile.birthday != null ? #temporals.format(profile.birthday, 'dd/MM/yyyy') : '-'}">-</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Team</span>
+                            <span th:text="${profile.teamName != null ? profile.teamName : 'Chưa thuộc team'}">-</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">Vị trí</span>
+                            <span th:text="${profile.positionName != null ? profile.positionName : 'Chưa gán'}">-</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold">Dự án đã tham gia</div>
+                <div class="card-body p-0">
+                    <table class="table mb-0 align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Dự án</th>
+                            <th>Viết tắt</th>
+                            <th>Team</th>
+                            <th>Bắt đầu</th>
+                            <th>Kết thúc</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${profile.projects}">
+                            <td th:text="${p.name}">Project</td>
+                            <td th:text="${p.abbreviation}">ABC</td>
+                            <td th:text="${p.team != null ? p.team.name : '-'}">Team</td>
+                            <td th:text="${p.startDate != null ? #temporals.format(p.startDate, 'dd/MM/yyyy') : '-'}">-</td>
+                            <td th:text="${p.endDate != null ? #temporals.format(p.endDate, 'dd/MM/yyyy') : '-'}">-</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(profile.projects)}">
+                            <td colspan="5" class="text-center text-muted py-3">Chưa tham gia dự án nào.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-semibold">Kỹ năng</div>
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(profile.skills)}" class="text-muted">Chưa có kỹ năng nào.</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span th:each="s : ${profile.skills}" class="badge bg-light text-dark border p-2">
+                            <span class="fw-semibold" th:text="${s.name}">Java</span>
+                            <span class="text-muted" th:if="${s.level != null}" th:text="' · ' + ${s.level}"> · level</span>
+                            <span class="text-muted" th:if="${s.usedYearNumber != null}"
+                                  th:text="' · ' + ${s.usedYearNumber} + ' năm'"> · năm</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
