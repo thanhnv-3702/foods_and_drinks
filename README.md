@@ -2,6 +2,38 @@
 
 Hệ thống quản lý thành viên (Requirement 3) — Spring Boot 3 + Thymeleaf + MySQL.
 
+## Demo server (đã deploy)
+
+Ứng dụng đang chạy trên AWS EC2 để mọi người truy cập và test trực tiếp:
+
+**URL:** http://3.26.185.21:8080
+
+| Mục | Giá trị |
+|-----|---------|
+| Region | AWS `ap-southeast-2` (Sydney) |
+| Deploy | Docker Compose (Spring Boot + MySQL) |
+| Trạng thái | VM `member-management-vm` |
+
+### Đăng nhập thử
+
+| Email | Mật khẩu | Role | Dùng để test |
+|-------|----------|------|--------------|
+| `admin@slearn.local` | `Admin@12345` | ADMIN | CRUD admin, import/export CSV, activity logs |
+| `user@slearn.local` | `User@12345` | USER | Profile, teams, notifications |
+
+Các tài khoản demo khác (`demo_a` … `demo_e@slearn.local`, mật khẩu `User@12345`) có sẵn nếu cần test team/project.
+
+### Gợi ý test nhanh
+
+1. Mở http://3.26.185.21:8080 → **Login**
+2. Admin: http://3.26.185.21:8080/admin — quản lý users, teams, projects
+3. Client: `/profile`, `/teams`, `/notifications` sau khi đăng nhập user
+4. Export CSV từ admin → kiểm tra file tải về
+
+> Server demo dùng dữ liệu seed mẫu. Không nhập thông tin nhạy cảm thật.
+
+Chi tiết triển khai: `deploy/aws-ec2/README.md`
+
 ## Yêu cầu
 
 - Java 17+

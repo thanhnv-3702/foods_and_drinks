@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    show-sql: false
+  thymeleaf:
+    cache: true
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: warn

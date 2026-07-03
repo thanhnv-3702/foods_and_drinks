@@ -1,0 +1,15 @@
+target/
+.git/
+.idea/
+.vscode/
+*.iml
+node_modules/
+docs/
+PLAN.md
+README
+REQ
+*.log
+.env
+application-local.yml
+sunlint-report.html
+quality-report.json
