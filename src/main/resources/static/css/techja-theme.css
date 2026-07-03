@@ -1,0 +1,263 @@
+/* TechJA theme — Bootstrap 5 bridge (stack Thymeleaf, khong dung Tailwind) */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+/* Map semantic tokens -> Bootstrap variables */
+:root,
+[data-bs-theme="light"] {
+  --bs-body-font-family: var(--font-sans);
+  --bs-body-bg: var(--muted);
+  --bs-body-color: var(--foreground);
+
+  --bs-primary: var(--primary);
+  --bs-primary-rgb: 243, 135, 68;
+  --bs-secondary: var(--secondary);
+  --bs-secondary-rgb: 46, 144, 250;
+
+  --bs-success: var(--success);
+  --bs-success-rgb: 21, 128, 61;
+  --bs-warning: var(--warning);
+  --bs-warning-rgb: 247, 144, 9;
+  --bs-danger: var(--danger);
+  --bs-danger-rgb: 240, 68, 56;
+
+  --bs-border-color: var(--border);
+  --bs-link-color: var(--primary);
+  --bs-link-hover-color: #e06f2a;
+
+  --bs-border-radius: var(--radius);
+  --bs-border-radius-sm: var(--radius-sm);
+  --bs-border-radius-lg: var(--radius-lg);
+  --bs-border-radius-xl: var(--radius-xl);
+  --bs-border-radius-pill: 50rem;
+
+  --bs-focus-ring-color: rgba(243, 135, 68, 0.35);
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background-color: var(--muted);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Buttons (rounded-full, semibold — TechJA signature) ---- */
+.btn {
+  font-weight: 600;
+  border-radius: 50rem;
+  transition: opacity 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #e06f2a;
+  border-color: #e06f2a;
+  color: var(--primary-foreground);
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--border);
+  background-color: var(--card);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent);
+  border-color: var(--primary);
+  color: var(--accent-foreground);
+}
+
+.btn-outline-secondary {
+  border-color: var(--border);
+  color: var(--muted-foreground);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.btn-outline-danger:hover {
+  background-color: rgba(240, 68, 56, 0.08);
+}
+
+.btn-outline-success {
+  color: var(--success);
+  border-color: var(--border);
+}
+
+.btn-outline-success:hover {
+  background-color: rgba(21, 128, 61, 0.08);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.btn-sm {
+  --bs-btn-padding-y: 0.35rem;
+  --bs-btn-padding-x: 0.85rem;
+  font-size: 0.8125rem;
+}
+
+/* ---- Badges (pill) ---- */
+.badge {
+  font-weight: 600;
+  border-radius: 50rem;
+  padding: 0.3em 0.65em;
+}
+
+.badge.bg-primary,
+.badge.text-bg-primary {
+  background-color: rgba(243, 135, 68, 0.12) !important;
+  color: var(--primary) !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--muted) !important;
+  color: var(--muted-foreground) !important;
+}
+
+.badge.bg-success,
+.badge.text-bg-success {
+  background-color: rgba(21, 128, 61, 0.12) !important;
+  color: var(--success) !important;
+}
+
+.badge.bg-danger {
+  background-color: rgba(240, 68, 56, 0.12) !important;
+  color: var(--danger) !important;
+}
+
+/* ---- Cards & tables ---- */
+.card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.card.border-0.shadow-sm {
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04) !important;
+}
+
+.table {
+  --bs-table-bg: var(--card);
+  --bs-table-border-color: var(--border);
+}
+
+.table-light {
+  --bs-table-bg: var(--muted);
+  --bs-table-color: var(--muted-foreground);
+}
+
+.table-hover > tbody > tr:hover > * {
+  background-color: var(--accent);
+}
+
+/* ---- Forms ---- */
+.form-control,
+.form-select {
+  border-color: var(--input);
+  border-radius: var(--radius-md);
+  color: var(--foreground);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(243, 135, 68, 0.2);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--foreground);
+  font-size: 0.875rem;
+}
+
+/* ---- Alerts ---- */
+.alert {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.alert-success {
+  background-color: rgba(21, 128, 61, 0.08);
+  border-color: rgba(21, 128, 61, 0.2);
+  color: var(--success);
+}
+
+.alert-danger {
+  background-color: rgba(240, 68, 56, 0.08);
+  border-color: rgba(240, 68, 56, 0.2);
+  color: var(--danger);
+}
+
+.alert-warning {
+  background-color: rgba(247, 144, 9, 0.1);
+  border-color: rgba(247, 144, 9, 0.25);
+  color: var(--accent-foreground);
+}
+
+.alert-info,
+.alert-light {
+  background-color: var(--accent);
+  border-color: rgba(243, 135, 68, 0.2);
+  color: var(--accent-foreground);
+}
+
+/* ---- Pagination ---- */
+.page-link {
+  border-radius: var(--radius-md);
+  border-color: var(--border);
+  color: var(--muted-foreground);
+  margin: 0 2px;
+}
+
+.page-link:hover {
+  background-color: var(--accent);
+  border-color: var(--border);
+  color: var(--accent-foreground);
+}
+
+.page-item.active .page-link {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* ---- Section headings ---- */
+.section-heading h1,
+.section-heading h2,
+.section-heading .h4,
+.section-heading .h5 {
+  color: var(--foreground);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.section-heading .subtitle {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+/* ---- Links in content ---- */
+a:not(.btn):not(.nav-link):not(.navbar-brand):not(.page-link) {
+  color: var(--primary);
+}
+
+a:not(.btn):not(.nav-link):not(.navbar-brand):not(.page-link):hover {
+  color: #e06f2a;
+}
+
+.container-page {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}

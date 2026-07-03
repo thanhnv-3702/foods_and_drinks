@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
 <body>
-<aside class="admin-sidebar d-flex flex-column flex-shrink-0 p-3 text-white">
-  <a th:href="@{/admin}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-    <span class="fs-5 fw-semibold">Admin Panel</span>
+<aside class="admin-sidebar d-flex flex-column flex-shrink-0 p-3">
+  <a th:href="@{/admin}" class="d-flex align-items-center gap-2 mb-3 text-decoration-none">
+    <img th:src="@{/images/techja-icon.svg}" alt="" class="brand-logo" width="28" height="28">
+    <span class="brand-title fs-5">Admin Panel</span>
   </a>
-  <hr class="border-secondary">
+  <hr>
   <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
-      <a th:href="@{/admin}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'dashboard'} ? 'active' : 'link-dark'">
+      <a th:href="@{/admin}" class="nav-link"
+         th:classappend="${activeMenu == 'dashboard'} ? 'active' : ''">
         Dashboard
       </a>
     </li>
     <li>
-      <a th:href="@{/admin/users}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'users'} ? 'active' : 'link-dark'">Users</a>
+      <a th:href="@{/admin/users}" class="nav-link"
+         th:classappend="${activeMenu == 'users'} ? 'active' : ''">Users</a>
     </li>
     <li>
-      <a th:href="@{/admin/teams}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'teams'} ? 'active' : 'link-dark'">Teams</a>
+      <a th:href="@{/admin/teams}" class="nav-link"
+         th:classappend="${activeMenu == 'teams'} ? 'active' : ''">Teams</a>
     </li>
     <li>
-      <a th:href="@{/admin/positions}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'positions'} ? 'active' : 'link-dark'">Positions</a>
+      <a th:href="@{/admin/positions}" class="nav-link"
+         th:classappend="${activeMenu == 'positions'} ? 'active' : ''">Positions</a>
     </li>
     <li>
-      <a th:href="@{/admin/projects}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'projects'} ? 'active' : 'link-dark'">Projects</a>
+      <a th:href="@{/admin/projects}" class="nav-link"
+         th:classappend="${activeMenu == 'projects'} ? 'active' : ''">Projects</a>
     </li>
     <li>
-      <a th:href="@{/admin/skills}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'skills'} ? 'active' : 'link-dark'">Skills</a>
+      <a th:href="@{/admin/skills}" class="nav-link"
+         th:classappend="${activeMenu == 'skills'} ? 'active' : ''">Skills</a>
     </li>
     <li>
-      <a th:href="@{/admin/activity-logs}" class="nav-link text-white"
-         th:classappend="${activeMenu == 'activity-logs'} ? 'active' : 'link-dark'">Activity Logs</a>
+      <a th:href="@{/admin/activity-logs}" class="nav-link"
+         th:classappend="${activeMenu == 'activity-logs'} ? 'active' : ''">Activity Logs</a>
     </li>
   </ul>
-  <hr class="border-secondary">
-  <div class="small text-white-50">
-    <a th:href="@{/}" class="text-white-50 text-decoration-none">&larr; Back to client</a>
+  <hr>
+  <div>
+    <a th:href="@{/}" class="back-link text-decoration-none">&larr; Back to client</a>
   </div>
 </aside>
 </body>
