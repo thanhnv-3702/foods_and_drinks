@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import com.slearn.membermanagement.dto.SkillForm;
 import com.slearn.membermanagement.service.SkillService;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminSkillController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AdminSkillControllerTest {
+class AdminSkillControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

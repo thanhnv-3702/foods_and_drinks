@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import com.slearn.membermanagement.service.CsvExportService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminExportController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AdminExportControllerTest {
+class AdminExportControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

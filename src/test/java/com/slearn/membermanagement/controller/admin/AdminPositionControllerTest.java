@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import com.slearn.membermanagement.dto.PositionForm;
 import com.slearn.membermanagement.service.PositionService;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminPositionController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AdminPositionControllerTest {
+class AdminPositionControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

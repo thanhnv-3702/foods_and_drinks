@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AuthControllerTest {
+class AuthControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import com.slearn.membermanagement.service.ClientTeamService;
 import com.slearn.membermanagement.support.TestEntityFactory;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ClientTeamController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class ClientTeamControllerTest {
+class ClientTeamControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

@@ -49,6 +49,9 @@ class ProjectServiceTest {
     @Mock
     private ActivityLogService activityLogService;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private ProjectService projectService;
 

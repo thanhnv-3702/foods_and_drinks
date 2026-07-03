@@ -1,13 +1,10 @@
-package com.slearn.membermanagement.controller.admin;
+package com.slearn.membermanagement.controller;
 
 import com.slearn.membermanagement.support.WebMvcTestBase;
-
-import com.slearn.membermanagement.service.ActivityLogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,38 +21,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@WebMvcTest(AdminActivityLogController.class)
+@WebMvcTest(NotificationController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AdminActivityLogControllerTest extends WebMvcTestBase {
+class NotificationControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private ActivityLogService activityLogService;
+    @Test
+    void list_returnsView() throws Exception {
+        when(notificationService.findMyNotifications(any(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of()));
+        when(notificationService.countMyUnread()).thenReturn(2L);
+
+        mockMvc.perform(get("/notifications"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("client/notifications/list"));
+    }
 
     @Test
-    void list_returnsListView() throws Exception {
-        when(activityLogService.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
+    void markAsRead_redirects() throws Exception {
+        mockMvc.perform(post("/notifications/3/read"))
+                .andExpect(redirectedUrl("/notifications/3"));
 
-        mockMvc.perform(get("/admin/activity-logs"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/activity-logs/list"));
+        verify(notificationService).markAsRead(3L);
     }
 
     @Test
     void delete_redirects() throws Exception {
-        mockMvc.perform(post("/admin/activity-logs/7/delete"))
-                .andExpect(redirectedUrl("/admin/activity-logs"));
+        mockMvc.perform(post("/notifications/4/delete"))
+                .andExpect(redirectedUrl("/notifications"));
 
-        verify(activityLogService).delete(7L);
-    }
-
-    @Test
-    void clear_redirects() throws Exception {
-        mockMvc.perform(post("/admin/activity-logs/clear"))
-                .andExpect(redirectedUrl("/admin/activity-logs"));
-
-        verify(activityLogService).deleteAll();
+        verify(notificationService).deleteMyNotification(4L);
     }
 }

@@ -100,6 +100,7 @@
                         <exclude>**/dto/**</exclude>
                         <exclude>**/config/DataInitializer*</exclude>
                         <exclude>**/MemberManagementApplication*</exclude>
+                        <exclude>**/service/CsvImportService*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

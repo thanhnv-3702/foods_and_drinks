@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller.admin;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import com.slearn.membermanagement.dto.UserForm;
 import com.slearn.membermanagement.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminUserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class AdminUserControllerTest {
+class AdminUserControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

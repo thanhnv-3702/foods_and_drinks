@@ -1,5 +1,7 @@
 package com.slearn.membermanagement.controller;
 
+import com.slearn.membermanagement.support.WebMvcTestBase;
+
 import com.slearn.membermanagement.dto.ProfileView;
 import com.slearn.membermanagement.service.ClientTeamService;
 import com.slearn.membermanagement.service.ProfileService;
@@ -24,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ClientMemberController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class ClientMemberControllerTest {
+class ClientMemberControllerTest extends WebMvcTestBase {
 
     @Autowired
     private MockMvc mockMvc;

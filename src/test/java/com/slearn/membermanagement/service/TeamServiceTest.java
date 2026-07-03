@@ -36,6 +36,9 @@ class TeamServiceTest {
     @Mock
     private ActivityLogService activityLogService;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private TeamService teamService;
 

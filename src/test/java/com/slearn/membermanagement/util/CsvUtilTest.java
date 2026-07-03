@@ -37,4 +37,37 @@ class CsvUtilTest {
 
         assertThat(csv).contains("Col\r\n\r\n");
     }
+
+    @Test
+    void parse_emptyContent_returnsEmptyList() {
+        assertThat(CsvUtil.parse(null)).isEmpty();
+        assertThat(CsvUtil.parse("")).isEmpty();
+    }
+
+    @Test
+    void parse_simpleRows() {
+        String csv = "ID,Name\r\n1,Alice\r\n2,Bob\r\n";
+
+        List<List<String>> rows = CsvUtil.parse(csv);
+
+        assertThat(rows).hasSize(3);
+        assertThat(rows.get(0)).containsExactly("ID", "Name");
+        assertThat(rows.get(1)).containsExactly("1", "Alice");
+    }
+
+    @Test
+    void parse_quotedFieldsWithCommaAndEscapes() {
+        String csv = "A,B\r\n\"a,b\",\"say \"\"hi\"\"\"\r\n";
+
+        List<List<String>> rows = CsvUtil.parse(csv);
+
+        assertThat(rows.get(1)).containsExactly("a,b", "say \"hi\"");
+    }
+
+    @Test
+    void parse_stripsBom() {
+        List<List<String>> rows = CsvUtil.parse("\uFEFFX\r\n1");
+
+        assertThat(rows.get(0)).containsExactly("X");
+    }
 }
