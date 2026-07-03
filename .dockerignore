@@ -7,7 +7,6 @@ node_modules/
 docs/
 PLAN.md
 README
-REQ
 *.log
 .env
 application-local.yml

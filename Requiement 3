@@ -1,0 +1,87 @@
+Requiement 3    
+    [Member Management System]
+    * Design DB & GUI
+    * Homepage (make framework)
+    - Start framework
+    - Make home page layout
+      + client layout
+      + admin layout (using name space admin)
+    * Client:
+    - Sign in/sign out
+    - User Profile page
+      + Basic information: name, email, birthday
+      + Current team
+      + Current position
+      + Current Projects joined in team
+      + List all Skills
+    - List all teams page (index page)
+      + List all teams with pagination
+      + Show members in team when click team's name
+    - List all members in a team page
+      + List all members in a team with pagination
+      + Show user profile when click member's name
+    * Admin
+    - Sign in/Sign out
+    - CRUD User
+      + List all users with pagination, filter by Team
+      + Show user profile when click user's name
+      + Create new a user: name, email, birthday, team, position, projects joined, skills
+      + Edit a user information: name, email, birthday, team, position, projects joined, skills
+      + Delete a user
+    - CRUD Position
+      + List all positions with pagination
+      + Create new a position: name, abbreviation (short name)
+      + Edit a position information: name, abbreviation (short name)
+      + Delete a position
+    - CRUD Project joined
+      + List all projects with pagination, filter by Team
+      + Create new a project: name, abbreviation (short name), start date, end date, project leader, team, members
+      + Edit a project information: name, abbreviation (short name), start date, end date, project leader, team, members
+      + Delete a project (include resign all members)
+      (each member in a team can join to multiple projects in team)
+    - CRUD Skill
+      + List all skills with pagination
+      + Create new a skill: name, level, used year number
+      + Edit a skill information: name, level, used year number
+      + Delete a skill
+    - CRUD Team
+      + List all teams with pagination
+      + Create new a team: name, description, leader
+      + Edit a team information: name, description, leader
+      + Delete a team
+      + Add/move members to a team (each user only belongs to one team at a time)
+      + View the history of team members.
+    - Activity log
+      + List all activity logs: time, action, user, description
+      + Add new activity log:
+        . Sign in/sign out: user and admin
+        . Create, update or delete user
+        . Create, update or delete position
+        . Create, update or delete project
+        . Create, update or delete skill
+        . Create, update or delete team
+        . Add/move members to a team
+      + Delete a activity log
+    - Export to CSV
+      + User (with all skills)
+      + Position
+      + Project (with all members)
+      + Skill
+      + Team
+    - Import from CSV
+      + User (with all skills)
+      + Position
+      + Project (with all members)
+      + Skill
+      + Team
+    "- Notification – CRUD for Team & Project
+Create
+The system sends notifications to relevant members when a Team or Project is created, including the name, owner/manager, and creation timestamp.
+Read
+Members can view a list of notifications related to Teams and Projects, distinguish between unread and read statuses, and access notification details.
+Update
+The system sends notifications when a Team or Project is updated (such as changes to information, members, or status), clearly indicating the main changes.
+Delete
+The system sends notifications when a Team or Project is deleted, informing affected members of the impact and providing next steps if applicable.
+Manage
+Members can mark notifications as read or delete them for Team/Project CRUD actions; the system maintains notification history for audit and tracking purposes."

@@ -35,7 +35,6 @@ out/
 # Local-only planning, requirements & docs (không đẩy lên remote)
 PLAN.md
 README
-REQ
 docs/
 node_modules
 
