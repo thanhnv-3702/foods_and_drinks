@@ -90,8 +90,19 @@ java -jar target/member-management-0.0.1-SNAPSHOT.jar --spring.profiles.active=l
 ## Kiểm thử
 
 ```bash
+# Chạy toàn bộ unit + integration tests (profile test, H2 in-memory)
+# Yêu cầu JDK 17 (Mockito không tương thích JDK 26)
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 mvn test
+
+# Test + kiểm tra coverage ≥ 70% (JaCoCo)
+mvn verify
+
+# Báo cáo coverage (JaCoCo)
+open target/site/jacoco/index.html
 ```
+
+**Test suite hiện có:** 103 tests — service unit (Mockito), controller slice (`@WebMvcTest`), pure unit, integration smoke. Profile `test` tắt `DataInitializer`. Coverage gate: **≥ 70%** instruction (loại trừ entity, dto, DataInitializer).
 
 ## SunLint (code quality)
 
