@@ -93,6 +93,26 @@ java -jar target/member-management-0.0.1-SNAPSHOT.jar --spring.profiles.active=l
 mvn test
 ```
 
+## SunLint (code quality)
+
+Theo chuẩn Sun* Engineering — cài Node deps trước: `npm install`.
+
+```bash
+# Basic
+npm run lint              # sunlint --all --input=src
+npm run lint:changed      # chỉ file git đã đổi
+npm run lint:security     # rule security
+
+# Advanced
+npm run lint:eslint       # tích hợp ESLint
+npm run lint:pr           # CI/PR: fail-on-new-violations
+
+# Repo này (Spring Boot Java): src/ không có .ts/.js → dùng lint:all
+npm run lint:all          # quét theme-kit + file JS/TS trong project
+```
+
+> SunLint phân tích **JS/TypeScript**. Java (`src/main/java`) dùng `mvn test` / Checkstyle riêng.
+
 ## Cấu trúc project
 
 ```
