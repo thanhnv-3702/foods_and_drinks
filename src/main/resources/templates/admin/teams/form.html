@@ -15,6 +15,7 @@
         <div class="card-body">
             <form th:action="${teamForm.id} != null ? @{/admin/teams/{id}(id=${teamForm.id})} : @{/admin/teams}"
                   method="post" th:object="${teamForm}" novalidate>
+                <div th:replace="~{fragments/form-validation :: summary}"></div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên team <span class="text-danger">*</span></label>
                     <input type="text" id="name" class="form-control" th:field="*{name}"

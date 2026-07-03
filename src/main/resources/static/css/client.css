@@ -2,3 +2,17 @@
 .navbar-brand {
     letter-spacing: 0.02em;
 }
+
+.card {
+    border-radius: 0.5rem;
+}
+
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 576px) {
+    .navbar .badge {
+        font-size: 0.65rem;
+    }
+}

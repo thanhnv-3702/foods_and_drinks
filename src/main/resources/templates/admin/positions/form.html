@@ -15,6 +15,7 @@
         <div class="card-body">
             <form th:action="${positionForm.id} != null ? @{/admin/positions/{id}(id=${positionForm.id})} : @{/admin/positions}"
                   method="post" th:object="${positionForm}" novalidate>
+                <div th:replace="~{fragments/form-validation :: summary}"></div>
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên vị trí <span class="text-danger">*</span></label>
                     <input type="text" id="name" class="form-control" th:field="*{name}"
