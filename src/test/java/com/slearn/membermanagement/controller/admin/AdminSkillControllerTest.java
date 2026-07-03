@@ -19,6 +19,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -39,7 +41,20 @@ class AdminSkillControllerTest {
 
         mockMvc.perform(get("/admin/skills"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("admin/skills/list"));
+                .andExpect(view().name("admin/skills/list"))
+                .andExpect(model().attribute("pageTitle", "Skills"))
+                .andExpect(model().attribute("activeMenu", "skills"));
+    }
+
+    @Test
+    void createForm_returnsFormView() throws Exception {
+        when(skillService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(get("/admin/skills/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/skills/form"))
+                .andExpect(model().attributeExists("skillForm"))
+                .andExpect(model().attribute("pageTitle", "Tạo Skill"));
     }
 
     @Test
@@ -47,24 +62,42 @@ class AdminSkillControllerTest {
         mockMvc.perform(post("/admin/skills")
                         .param("name", "Java")
                         .param("userId", "1"))
-                .andExpect(redirectedUrl("/admin/skills"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/skills"))
+                .andExpect(flash().attribute("successMessage", "Đã tạo kỹ năng thành công."));
 
         verify(skillService).create(any(SkillForm.class));
     }
 
     @Test
     void create_invalidForm_returnsForm() throws Exception {
+        when(skillService.findAllUsers()).thenReturn(List.of());
+
         mockMvc.perform(post("/admin/skills").param("name", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/skills/form"))
+                .andExpect(model().attribute("pageTitle", "Tạo Skill"));
+    }
+
+    @Test
+    void create_missingUserId_returnsForm() throws Exception {
+        when(skillService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/skills").param("name", "Python"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/skills/form"));
     }
 
     @Test
-    void delete_redirects() throws Exception {
-        mockMvc.perform(post("/admin/skills/3/delete"))
-                .andExpect(redirectedUrl("/admin/skills"));
+    void editForm_loadsForm() throws Exception {
+        when(skillService.getFormById(1L)).thenReturn(
+                SkillForm.builder().id(1L).name("Java").userId(2L).build());
+        when(skillService.findAllUsers()).thenReturn(List.of());
 
-        verify(skillService).delete(3L);
+        mockMvc.perform(get("/admin/skills/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/skills/form"))
+                .andExpect(model().attribute("pageTitle", "Sửa Skill"));
     }
 
     @Test
@@ -72,8 +105,28 @@ class AdminSkillControllerTest {
         mockMvc.perform(post("/admin/skills/2")
                         .param("name", "Go")
                         .param("userId", "1"))
-                .andExpect(redirectedUrl("/admin/skills"));
+                .andExpect(redirectedUrl("/admin/skills"))
+                .andExpect(flash().attribute("successMessage", "Đã cập nhật kỹ năng thành công."));
 
         verify(skillService).update(eq(2L), any(SkillForm.class));
+    }
+
+    @Test
+    void update_invalidForm_returnsForm() throws Exception {
+        when(skillService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/skills/2").param("name", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/skills/form"))
+                .andExpect(model().attribute("pageTitle", "Sửa Skill"));
+    }
+
+    @Test
+    void delete_redirects() throws Exception {
+        mockMvc.perform(post("/admin/skills/3/delete"))
+                .andExpect(redirectedUrl("/admin/skills"))
+                .andExpect(flash().attribute("successMessage", "Đã xóa kỹ năng."));
+
+        verify(skillService).delete(3L);
     }
 }

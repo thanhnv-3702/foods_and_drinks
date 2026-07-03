@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -40,15 +41,73 @@ class AdminTeamControllerTest {
 
         mockMvc.perform(get("/admin/teams"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("admin/teams/list"));
+                .andExpect(view().name("admin/teams/list"))
+                .andExpect(model().attribute("pageTitle", "Teams"))
+                .andExpect(model().attribute("activeMenu", "teams"));
+    }
+
+    @Test
+    void createForm_returnsFormView() throws Exception {
+        when(teamService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(get("/admin/teams/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/teams/form"))
+                .andExpect(model().attributeExists("teamForm"))
+                .andExpect(model().attribute("pageTitle", "Tạo Team"));
     }
 
     @Test
     void create_validForm_redirects() throws Exception {
         mockMvc.perform(post("/admin/teams").param("name", "Alpha"))
-                .andExpect(redirectedUrl("/admin/teams"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/teams"))
+                .andExpect(flash().attribute("successMessage", "Đã tạo team thành công."));
 
         verify(teamService).create(any(TeamForm.class));
+    }
+
+    @Test
+    void create_invalidForm_returnsForm() throws Exception {
+        when(teamService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/teams").param("name", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/teams/form"))
+                .andExpect(model().attribute("pageTitle", "Tạo Team"));
+    }
+
+    @Test
+    void editForm_loadsForm() throws Exception {
+        when(teamService.getFormById(1L)).thenReturn(
+                TeamForm.builder().id(1L).name("Alpha").description("Team A").build());
+        when(teamService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(get("/admin/teams/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/teams/form"))
+                .andExpect(model().attribute("pageTitle", "Sửa Team"));
+    }
+
+    @Test
+    void update_validForm_redirects() throws Exception {
+        mockMvc.perform(post("/admin/teams/2")
+                        .param("name", "Beta")
+                        .param("description", "Updated"))
+                .andExpect(redirectedUrl("/admin/teams"))
+                .andExpect(flash().attribute("successMessage", "Đã cập nhật team thành công."));
+
+        verify(teamService).update(eq(2L), any(TeamForm.class));
+    }
+
+    @Test
+    void update_invalidForm_returnsForm() throws Exception {
+        when(teamService.findAllUsers()).thenReturn(List.of());
+
+        mockMvc.perform(post("/admin/teams/2").param("name", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/teams/form"))
+                .andExpect(model().attribute("pageTitle", "Sửa Team"));
     }
 
     @Test
