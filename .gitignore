@@ -42,3 +42,4 @@ node_modules
 # SunLint reports
 sunlint-report.html
 quality-report.json
+.sunlint-eslint.config.js
