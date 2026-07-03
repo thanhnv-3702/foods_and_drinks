@@ -18,10 +18,13 @@ public class SkillService {
 
     private final SkillRepository skillRepository;
     private final UserRepository userRepository;
+    private final ActivityLogService activityLogService;
 
-    public SkillService(SkillRepository skillRepository, UserRepository userRepository) {
+    public SkillService(SkillRepository skillRepository, UserRepository userRepository,
+                        ActivityLogService activityLogService) {
         this.skillRepository = skillRepository;
         this.userRepository = userRepository;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional(readOnly = true)
@@ -61,7 +64,10 @@ public class SkillService {
                 .usedYearNumber(form.getUsedYearNumber())
                 .user(user)
                 .build();
-        return skillRepository.save(skill);
+        skillRepository.save(skill);
+        activityLogService.record("CREATE_SKILL",
+                "Tạo kỹ năng '" + skill.getName() + "' cho user id=" + user.getId());
+        return skill;
     }
 
     @Transactional
@@ -71,13 +77,18 @@ public class SkillService {
         skill.setLevel(form.getLevel());
         skill.setUsedYearNumber(form.getUsedYearNumber());
         skill.setUser(findUser(form.getUserId()));
-        return skillRepository.save(skill);
+        skillRepository.save(skill);
+        activityLogService.record("UPDATE_SKILL",
+                "Cập nhật kỹ năng '" + skill.getName() + "' (id=" + skill.getId() + ")");
+        return skill;
     }
 
     @Transactional
     public void delete(Long id) {
         Skill skill = getById(id);
         skillRepository.delete(skill);
+        activityLogService.record("DELETE_SKILL",
+                "Xóa kỹ năng '" + skill.getName() + "' (id=" + id + ")");
     }
 
     private User findUser(Long userId) {

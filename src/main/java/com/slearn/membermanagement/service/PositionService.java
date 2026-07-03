@@ -13,9 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PositionService {
 
     private final PositionRepository positionRepository;
+    private final ActivityLogService activityLogService;
 
-    public PositionService(PositionRepository positionRepository) {
+    public PositionService(PositionRepository positionRepository,
+                           ActivityLogService activityLogService) {
         this.positionRepository = positionRepository;
+        this.activityLogService = activityLogService;
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +48,10 @@ public class PositionService {
                 .name(form.getName())
                 .abbreviation(form.getAbbreviation())
                 .build();
-        return positionRepository.save(position);
+        positionRepository.save(position);
+        activityLogService.record("CREATE_POSITION",
+                "Tạo vị trí '" + position.getName() + "' (id=" + position.getId() + ")");
+        return position;
     }
 
     @Transactional
@@ -53,12 +59,17 @@ public class PositionService {
         Position position = getById(id);
         position.setName(form.getName());
         position.setAbbreviation(form.getAbbreviation());
-        return positionRepository.save(position);
+        positionRepository.save(position);
+        activityLogService.record("UPDATE_POSITION",
+                "Cập nhật vị trí '" + position.getName() + "' (id=" + position.getId() + ")");
+        return position;
     }
 
     @Transactional
     public void delete(Long id) {
         Position position = getById(id);
         positionRepository.delete(position);
+        activityLogService.record("DELETE_POSITION",
+                "Xóa vị trí '" + position.getName() + "' (id=" + id + ")");
     }
 }
