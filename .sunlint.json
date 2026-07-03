@@ -1,0 +1,10 @@
+{
+  "exclude": [
+    "target/**",
+    "node_modules/**",
+    ".mvn/**",
+    "docs/**",
+    ".git/**",
+    "package-lock.json"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "lint": "sunlint --all --input=. --exclude=target,node_modules,.git,.mvn,docs",
+    "lint:changed": "sunlint --all --changed-files --exclude=target,node_modules",
+    "lint:security": "sunlint --security --input=. --exclude=target,node_modules,.git,.mvn,docs"
+  },
+  "devDependencies": {
+    "@sun-asterisk/sunlint": "^1.3.56",
+    "@typescript-eslint/eslint-plugin": "^8.62.1",
+    "@typescript-eslint/parser": "^8.62.1",
+    "eslint": "^9.39.4",
+    "typescript": "^6.0.3"
+  }
+}
