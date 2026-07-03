@@ -4,4 +4,8 @@
 spring:
   datasource:
     username: root
-    password: your_mysql_password
+    password: Admin@12345
+
+logging:
+  level:
+    org.hibernate.SQL: warn
