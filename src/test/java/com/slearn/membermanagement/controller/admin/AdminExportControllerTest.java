@@ -36,4 +36,19 @@ class AdminExportControllerTest {
                 .andExpect(content().contentTypeCompatibleWith("text/csv"))
                 .andExpect(content().string(containsString("Alice")));
     }
+
+    @Test
+    void exportAllEndpoints_returnOk() throws Exception {
+        when(csvExportService.exportPositions()).thenReturn("csv");
+        when(csvExportService.exportSkills()).thenReturn("csv");
+        when(csvExportService.exportTeams()).thenReturn("csv");
+        when(csvExportService.exportProjects()).thenReturn("csv");
+        when(csvExportService.exportActivityLogs()).thenReturn("csv");
+
+        mockMvc.perform(get("/admin/export/positions.csv")).andExpect(status().isOk());
+        mockMvc.perform(get("/admin/export/skills.csv")).andExpect(status().isOk());
+        mockMvc.perform(get("/admin/export/teams.csv")).andExpect(status().isOk());
+        mockMvc.perform(get("/admin/export/projects.csv")).andExpect(status().isOk());
+        mockMvc.perform(get("/admin/export/activity-logs.csv")).andExpect(status().isOk());
+    }
 }

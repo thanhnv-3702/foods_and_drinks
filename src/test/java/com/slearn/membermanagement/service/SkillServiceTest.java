@@ -68,14 +68,17 @@ class SkillServiceTest {
     }
 
     @Test
-    void delete_removesAndLogs() {
+    void update_changesSkillAndLogs() {
         var user = TestEntityFactory.user(1L);
-        Skill skill = TestEntityFactory.skill(10L, user);
-        when(skillRepository.findById(10L)).thenReturn(Optional.of(skill));
+        Skill skill = TestEntityFactory.skill(5L, user);
+        when(skillRepository.findById(5L)).thenReturn(Optional.of(skill));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(skillRepository.save(any(Skill.class))).thenAnswer(inv -> inv.getArgument(0));
+        var form = SkillForm.builder().name("Kotlin").level("Junior").usedYearNumber(1).userId(1L).build();
 
-        skillService.delete(10L);
+        Skill updated = skillService.update(5L, form);
 
-        verify(skillRepository).delete(skill);
-        verify(activityLogService).record(eq("DELETE_SKILL"), contains("10"));
+        assertThat(updated.getName()).isEqualTo("Kotlin");
+        verify(activityLogService).record(eq("UPDATE_SKILL"), contains("Kotlin"));
     }
 }

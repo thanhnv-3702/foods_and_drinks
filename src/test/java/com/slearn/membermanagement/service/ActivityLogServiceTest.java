@@ -80,8 +80,8 @@ class ActivityLogServiceTest {
     }
 
     @Test
-    void delete_delegatesToRepository() {
-        activityLogService.delete(5L);
-        verify(activityLogRepository).deleteById(5L);
+    void deleteAll_delegatesToRepository() {
+        activityLogService.deleteAll();
+        verify(activityLogRepository).deleteAllInBatch();
     }
 }

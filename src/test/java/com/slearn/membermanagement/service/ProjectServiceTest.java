@@ -16,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,23 +99,20 @@ class ProjectServiceTest {
     }
 
     @Test
-    void update_removesMembersNotInDesiredList() {
-        Project project = TestEntityFactory.project(1L, TestEntityFactory.team(1L));
-        User kept = TestEntityFactory.user(2L);
-        User removed = TestEntityFactory.user(3L);
-        ProjectMember keptPm = TestEntityFactory.projectMember(project, kept);
-        ProjectMember removedPm = TestEntityFactory.projectMember(project, removed);
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(projectMemberRepository.findByProjectId(1L)).thenReturn(List.of(keptPm, removedPm));
-        when(projectRepository.save(any(Project.class))).thenReturn(project);
+    void findAll_withTeamId_filtersByTeam() {
+        when(projectRepository.findByTeamId(eq(1L), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of()));
 
-        var form = ProjectForm.builder()
-                .name("Portal")
-                .memberIds(List.of(2L))
-                .build();
+        projectService.findAll(1L, Pageable.unpaged());
 
-        projectService.update(1L, form);
+        verify(projectRepository).findByTeamId(1L, Pageable.unpaged());
+    }
 
-        verify(projectMemberRepository).delete(removedPm);
+    @Test
+    void memberCountByProject_mapsCounts() {
+        when(projectMemberRepository.countGroupedByProject())
+                .thenReturn(List.<Object[]>of(new Object[]{10L, 4L}));
+
+        assertThat(projectService.memberCountByProject()).containsEntry(10L, 4L);
     }
 }

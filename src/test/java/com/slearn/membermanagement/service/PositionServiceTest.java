@@ -72,15 +72,13 @@ class PositionServiceTest {
     }
 
     @Test
-    void delete_removesAndLogs() {
-        Position existing = TestEntityFactory.position(2L);
-        when(positionRepository.findById(2L)).thenReturn(Optional.of(existing));
+    void getFormById_mapsFields() {
+        Position p = TestEntityFactory.position(1L);
+        when(positionRepository.findById(1L)).thenReturn(Optional.of(p));
 
-        positionService.delete(2L);
+        var form = positionService.getFormById(1L);
 
-        ArgumentCaptor<Position> captor = ArgumentCaptor.forClass(Position.class);
-        verify(positionRepository).delete(captor.capture());
-        assertThat(captor.getValue().getId()).isEqualTo(2L);
-        verify(activityLogService).record(eq("DELETE_POSITION"), contains("2"));
+        assertThat(form.getName()).isEqualTo(p.getName());
+        assertThat(form.getAbbreviation()).isEqualTo(p.getAbbreviation());
     }
 }

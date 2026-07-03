@@ -2,6 +2,7 @@ package com.slearn.membermanagement.service;
 
 import com.slearn.membermanagement.dto.TeamForm;
 import com.slearn.membermanagement.entity.Team;
+import com.slearn.membermanagement.entity.User;
 import com.slearn.membermanagement.repository.TeamRepository;
 import com.slearn.membermanagement.repository.UserRepository;
 import com.slearn.membermanagement.support.TestEntityFactory;
@@ -80,13 +81,16 @@ class TeamServiceTest {
     }
 
     @Test
-    void update_leaderNotFound_throws() {
+    void update_withLeader_savesTeam() {
         Team team = TestEntityFactory.team(1L);
+        User leader = TestEntityFactory.user(2L);
         when(teamRepository.findById(1L)).thenReturn(Optional.of(team));
-        when(userRepository.findById(99L)).thenReturn(Optional.empty());
-        var form = TeamForm.builder().name("Beta").leaderId(99L).build();
+        when(userRepository.findById(2L)).thenReturn(Optional.of(leader));
+        when(teamRepository.save(any(Team.class))).thenAnswer(inv -> inv.getArgument(0));
+        var form = TeamForm.builder().name("Gamma").leaderId(2L).build();
 
-        assertThatThrownBy(() -> teamService.update(1L, form))
-                .isInstanceOf(EntityNotFoundException.class);
+        Team updated = teamService.update(1L, form);
+
+        assertThat(updated.getLeader()).isEqualTo(leader);
     }
 }

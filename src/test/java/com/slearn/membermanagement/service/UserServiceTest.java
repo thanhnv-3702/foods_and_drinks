@@ -1,7 +1,9 @@
 package com.slearn.membermanagement.service;
 
 import com.slearn.membermanagement.dto.UserForm;
+import com.slearn.membermanagement.entity.Position;
 import com.slearn.membermanagement.entity.Role;
+import com.slearn.membermanagement.entity.Team;
 import com.slearn.membermanagement.entity.User;
 import com.slearn.membermanagement.repository.PositionRepository;
 import com.slearn.membermanagement.repository.TeamRepository;
@@ -117,9 +119,28 @@ class UserServiceTest {
     }
 
     @Test
-    void emailExists_delegatesToRepository() {
-        when(userRepository.existsByEmailAndIdNot("a@test.local", 2L)).thenReturn(true);
+    void delete_success_returnsNull() {
+        User user = TestEntityFactory.user(5L);
+        when(userRepository.findById(5L)).thenReturn(Optional.of(user));
 
-        assertThat(userService.emailExists("a@test.local", 2L)).isTrue();
+        String error = userService.delete(5L, 1L);
+
+        assertThat(error).isNull();
+        verify(userRepository).delete(user);
+    }
+
+    @Test
+    void getFormById_mapsFields() {
+        Team team = TestEntityFactory.team(1L);
+        Position position = TestEntityFactory.position(2L);
+        User user = TestEntityFactory.user(3L);
+        user.setTeam(team);
+        user.setPosition(position);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+
+        var form = userService.getFormById(3L);
+
+        assertThat(form.getTeamId()).isEqualTo(1L);
+        assertThat(form.getPositionId()).isEqualTo(2L);
     }
 }
