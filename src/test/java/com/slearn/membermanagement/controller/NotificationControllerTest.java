@@ -54,4 +54,14 @@ class NotificationControllerTest extends WebMvcTestBase {
 
         verify(notificationService).deleteMyNotification(4L);
     }
+
+    @Test
+    void detail_returnsView() throws Exception {
+        when(notificationService.openMyNotification(2L))
+                .thenReturn(com.slearn.membermanagement.entity.Notification.builder().id(2L).build());
+
+        mockMvc.perform(get("/notifications/2"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("client/notifications/detail"));
+    }
 }
