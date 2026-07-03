@@ -1,5 +1,6 @@
 package com.slearn.membermanagement.exception;
 
+import com.slearn.membermanagement.service.MessageService;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,12 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private final MessageService messages;
+
+    public GlobalExceptionHandler(MessageService messages) {
+        this.messages = messages;
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(EntityNotFoundException ex, Model model) {
@@ -25,7 +32,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleGeneral(Exception ex, Model model) {
         log.error("Unhandled exception", ex);
-        model.addAttribute("message", "Đã xảy ra lỗi trên hệ thống. Vui lòng thử lại sau.");
+        model.addAttribute("message", messages.get("error.500.message"));
         return "error/500";
     }
 }

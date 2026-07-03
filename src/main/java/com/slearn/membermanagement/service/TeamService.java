@@ -21,14 +21,17 @@ public class TeamService {
     private final UserRepository userRepository;
     private final ActivityLogService activityLogService;
     private final NotificationService notificationService;
+    private final MessageService messages;
 
     public TeamService(TeamRepository teamRepository, UserRepository userRepository,
                        ActivityLogService activityLogService,
-                       NotificationService notificationService) {
+                       NotificationService notificationService,
+                       MessageService messages) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.activityLogService = activityLogService;
         this.notificationService = notificationService;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -44,7 +47,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public Team getById(Long id) {
         return teamRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy team id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.team.notFound", id)));
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +71,7 @@ public class TeamService {
         teamRepository.save(team);
         notificationService.notifyTeamCrud(team, NotificationAction.CREATE);
         activityLogService.record("CREATE_TEAM",
-                "Tạo team '" + team.getName() + "' (id=" + team.getId() + ")");
+                messages.get("activity.team.created", team.getName(), team.getId()));
         return team;
     }
 
@@ -81,7 +84,7 @@ public class TeamService {
         teamRepository.save(team);
         notificationService.notifyTeamCrud(team, NotificationAction.UPDATE);
         activityLogService.record("UPDATE_TEAM",
-                "Cập nhật team '" + team.getName() + "' (id=" + team.getId() + ")");
+                messages.get("activity.team.updated", team.getName(), team.getId()));
         return team;
     }
 
@@ -94,12 +97,12 @@ public class TeamService {
         Team team = getById(id);
         long memberCount = userRepository.countByTeamId(id);
         if (memberCount > 0) {
-            return "Không thể xóa team \"" + team.getName() + "\" vì còn " + memberCount + " thành viên.";
+            return messages.get("error.team.delete.hasMembers", team.getName(), memberCount);
         }
         notificationService.notifyTeamCrud(team, NotificationAction.DELETE);
         teamRepository.delete(team);
         activityLogService.record("DELETE_TEAM",
-                "Xóa team '" + team.getName() + "' (id=" + id + ")");
+                messages.get("activity.team.deleted", team.getName(), id));
         return null;
     }
 
@@ -108,6 +111,6 @@ public class TeamService {
             return null;
         }
         return userRepository.findById(leaderId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng id=" + leaderId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.user.notFound", leaderId)));
     }
 }

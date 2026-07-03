@@ -1,5 +1,6 @@
 package com.slearn.membermanagement.controller.admin;
 
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.TeamMemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminTeamMemberController {
 
     private final TeamMemberService teamMemberService;
+    private final MessageService messages;
 
-    public AdminTeamMemberController(TeamMemberService teamMemberService) {
+    public AdminTeamMemberController(TeamMemberService teamMemberService, MessageService messages) {
         this.teamMemberService = teamMemberService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -26,7 +29,7 @@ public class AdminTeamMemberController {
         model.addAttribute("members", teamMemberService.getMembers(teamId));
         model.addAttribute("candidates", teamMemberService.getCandidates(teamId));
         model.addAttribute("histories", teamMemberService.getHistory(teamId));
-        model.addAttribute("pageTitle", "Quản lý thành viên");
+        model.addAttribute("pageTitle", messages.get("page.team.members"));
         model.addAttribute("activeMenu", "teams");
         return "admin/teams/members";
     }
@@ -36,11 +39,11 @@ public class AdminTeamMemberController {
                             @RequestParam(required = false) Long userId,
                             RedirectAttributes ra) {
         if (userId == null) {
-            ra.addFlashAttribute("errorMessage", "Vui lòng chọn thành viên.");
+            ra.addFlashAttribute("errorMessage", messages.get("flash.team.member.select"));
             return "redirect:/admin/teams/" + teamId + "/members";
         }
         teamMemberService.addOrMoveMember(teamId, userId);
-        ra.addFlashAttribute("successMessage", "Đã thêm/di chuyển thành viên vào team.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.team.member.added"));
         return "redirect:/admin/teams/" + teamId + "/members";
     }
 
@@ -49,7 +52,7 @@ public class AdminTeamMemberController {
                                @PathVariable Long userId,
                                RedirectAttributes ra) {
         teamMemberService.removeMember(teamId, userId);
-        ra.addFlashAttribute("successMessage", "Đã gỡ thành viên khỏi team.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.team.member.removed"));
         return "redirect:/admin/teams/" + teamId + "/members";
     }
 }

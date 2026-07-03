@@ -2,6 +2,7 @@ package com.slearn.membermanagement.controller.admin;
 
 import com.slearn.membermanagement.entity.ActivityLog;
 import com.slearn.membermanagement.service.ActivityLogService;
+import com.slearn.membermanagement.service.MessageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +21,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminActivityLogController {
 
     private final ActivityLogService activityLogService;
+    private final MessageService messages;
 
-    public AdminActivityLogController(ActivityLogService activityLogService) {
+    public AdminActivityLogController(ActivityLogService activityLogService, MessageService messages) {
         this.activityLogService = activityLogService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -32,7 +35,7 @@ public class AdminActivityLogController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<ActivityLog> logs = activityLogService.findAll(pageable);
         model.addAttribute("logs", logs);
-        model.addAttribute("pageTitle", "Activity Logs");
+        model.addAttribute("pageTitle", messages.get("page.activityLogs"));
         model.addAttribute("activeMenu", "activity-logs");
         return "admin/activity-logs/list";
     }
@@ -40,14 +43,14 @@ public class AdminActivityLogController {
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes ra) {
         activityLogService.delete(id);
-        ra.addFlashAttribute("successMessage", "Đã xóa log.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.activity.deleted"));
         return "redirect:/admin/activity-logs";
     }
 
     @PostMapping("/clear")
     public String clear(RedirectAttributes ra) {
         activityLogService.deleteAll();
-        ra.addFlashAttribute("successMessage", "Đã xóa toàn bộ log.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.activity.cleared"));
         return "redirect:/admin/activity-logs";
     }
 }

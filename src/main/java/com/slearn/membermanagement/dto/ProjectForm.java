@@ -21,11 +21,11 @@ public class ProjectForm {
 
     private Long id;
 
-    @NotBlank(message = "Tên dự án không được để trống")
-    @Size(max = 150, message = "Tên dự án tối đa 150 ký tự")
+    @NotBlank(message = "{validation.project.name.required}")
+    @Size(max = 150, message = "{validation.project.name.max}")
     private String name;
 
-    @Size(max = 50, message = "Viết tắt tối đa 50 ký tự")
+    @Size(max = 50, message = "{validation.abbreviation.max}")
     private String abbreviation;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -34,7 +34,7 @@ public class ProjectForm {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
 
-    @NotNull(message = "Phải chọn team")
+    @NotNull(message = "{validation.team.required}")
     private Long teamId;
 
     private Long leaderId;

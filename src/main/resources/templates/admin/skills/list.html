@@ -2,16 +2,16 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Skills - Admin</title>
+    <title th:text="|#{page.skills} - #{nav.admin}|">Skills - Admin</title>
 </head>
 <body>
 <div id="admin-content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Danh sách Skills</h2>
+        <h2 class="h5 mb-0" th:text="#{admin.list.skills}">Skill list</h2>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/export/skills.csv}" class="btn btn-outline-success btn-sm">Export CSV</a>
-            <a th:href="@{/admin/skills/new}" class="btn btn-primary btn-sm">+ Thêm Skill</a>
+            <a th:href="@{/admin/export/skills.csv}" class="btn btn-outline-success btn-sm" th:text="#{admin.export.csv}">Export CSV</a>
+            <a th:href="@{/admin/skills/new}" class="btn btn-primary btn-sm" th:text="#{admin.add.skill}">+ Add skill</a>
         </div>
     </div>
 
@@ -20,12 +20,12 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th style="width: 70px;">ID</th>
-                    <th>Tên kỹ năng</th>
-                    <th>Mức độ</th>
-                    <th>Số năm</th>
-                    <th>Người sở hữu</th>
-                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                    <th style="width: 70px;" th:text="#{col.id}">ID</th>
+                    <th th:text="#{col.skillName}">Skill name</th>
+                    <th th:text="#{col.level}">Level</th>
+                    <th th:text="#{col.years}">Years</th>
+                    <th th:text="#{col.owner}">Owner</th>
+                    <th style="width: 160px;" class="text-end" th:text="#{common.actions}">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,18 +34,18 @@
                     <td th:text="${s.name}">Java</td>
                     <td th:text="${s.level}">Advanced</td>
                     <td th:text="${s.usedYearNumber}">3</td>
-                    <td th:text="${s.user != null ? s.user.name : '-'}">User</td>
+                    <td th:text="${s.user != null ? s.user.name : #messages.msg('common.none')}">User</td>
                     <td class="text-end">
                         <a th:href="@{/admin/skills/{id}/edit(id=${s.id})}"
-                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                           class="btn btn-outline-secondary btn-sm" th:text="#{common.edit}">Edit</a>
                         <form th:action="@{/admin/skills/{id}/delete(id=${s.id})}" method="post"
-                              class="d-inline" onsubmit="return confirm('Xóa kỹ năng này?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                              class="d-inline" th:attr="onsubmit=|return confirm('#{admin.confirm.deleteSkill}');|">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{common.delete}">Delete</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${skills.empty}">
-                    <td colspan="6" class="text-center text-muted py-4">Chưa có kỹ năng nào.</td>
+                    <td colspan="6" class="text-center text-muted py-4" th:text="#{admin.empty.skills}">No skills yet.</td>
                 </tr>
                 </tbody>
             </table>
@@ -53,7 +53,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
-        <span class="text-muted small" th:text="|Tổng: ${skills.totalElements} kỹ năng|">Tổng: 0</span>
+        <span class="text-muted small" th:text="#{admin.total.skills(${skills.totalElements})}">Total: 0</span>
         <div th:replace="~{fragments/pagination :: pager(${skills}, '/admin/skills')}"></div>
     </div>
 </div>

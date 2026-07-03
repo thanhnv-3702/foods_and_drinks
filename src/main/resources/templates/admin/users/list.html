@@ -2,15 +2,15 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Users - Admin</title>
+    <title th:text="|#{page.users} - #{nav.admin}|">Users - Admin</title>
 </head>
 <body>
 <div id="admin-content">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Danh sách người dùng</h2>
+        <h2 class="h5 mb-0" th:text="#{admin.list.users}">User list</h2>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/export/users.csv}" class="btn btn-outline-success btn-sm">Export CSV</a>
-            <a th:href="@{/admin/users/new}" class="btn btn-primary btn-sm">+ Thêm người dùng</a>
+            <a th:href="@{/admin/export/users.csv}" class="btn btn-outline-success btn-sm" th:text="#{admin.export.csv}">Export CSV</a>
+            <a th:href="@{/admin/users/new}" class="btn btn-primary btn-sm" th:text="#{admin.add.user}">+ Add user</a>
         </div>
     </div>
 
@@ -19,13 +19,13 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th style="width: 70px;">ID</th>
-                    <th>Họ tên</th>
-                    <th>Email</th>
-                    <th>Vai trò</th>
-                    <th>Team</th>
-                    <th>Vị trí</th>
-                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                    <th style="width: 70px;" th:text="#{col.id}">ID</th>
+                    <th th:text="#{col.fullName}">Full name</th>
+                    <th th:text="#{col.email}">Email</th>
+                    <th th:text="#{col.role}">Role</th>
+                    <th th:text="#{col.team}">Team</th>
+                    <th th:text="#{col.position}">Position</th>
+                    <th style="width: 160px;" class="text-end" th:text="#{common.actions}">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -38,19 +38,19 @@
                               th:classappend="${u.role.name() == 'ADMIN'} ? 'bg-danger' : 'bg-secondary'"
                               th:text="${u.role}">ROLE</span>
                     </td>
-                    <td th:text="${u.team != null ? u.team.name : '-'}">-</td>
-                    <td th:text="${u.position != null ? u.position.name : '-'}">-</td>
+                    <td th:text="${u.team != null ? u.team.name : #messages.msg('common.none')}">-</td>
+                    <td th:text="${u.position != null ? u.position.name : #messages.msg('common.none')}">-</td>
                     <td class="text-end">
                         <a th:href="@{/admin/users/{id}/edit(id=${u.id})}"
-                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                           class="btn btn-outline-secondary btn-sm" th:text="#{common.edit}">Edit</a>
                         <form th:action="@{/admin/users/{id}/delete(id=${u.id})}" method="post"
-                              class="d-inline" onsubmit="return confirm('Xóa người dùng này?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                              class="d-inline" th:attr="onsubmit=|return confirm('#{admin.confirm.deleteUser}');|">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{common.delete}">Delete</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${users.empty}">
-                    <td colspan="7" class="text-center text-muted py-4">Chưa có người dùng nào.</td>
+                    <td colspan="7" class="text-center text-muted py-4" th:text="#{admin.empty.users}">No users yet.</td>
                 </tr>
                 </tbody>
             </table>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
-        <span class="text-muted small" th:text="|Tổng: ${users.totalElements} người dùng|">Tổng: 0</span>
+        <span class="text-muted small" th:text="#{admin.total.users(${users.totalElements})}">Total: 0</span>
         <div th:replace="~{fragments/pagination :: pager(${users}, '/admin/users')}"></div>
     </div>
 </div>

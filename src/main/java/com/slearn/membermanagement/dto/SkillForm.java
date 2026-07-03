@@ -17,16 +17,16 @@ public class SkillForm {
 
     private Long id;
 
-    @NotBlank(message = "Tên kỹ năng không được để trống")
-    @Size(max = 150, message = "Tên kỹ năng tối đa 150 ký tự")
+    @NotBlank(message = "{validation.skill.name.required}")
+    @Size(max = 150, message = "{validation.skill.name.max}")
     private String name;
 
-    @Size(max = 50, message = "Mức độ tối đa 50 ký tự")
+    @Size(max = 50, message = "{validation.skill.level.max}")
     private String level;
 
-    @Min(value = 0, message = "Số năm sử dụng không hợp lệ")
+    @Min(value = 0, message = "{validation.skill.years.min}")
     private Integer usedYearNumber;
 
-    @NotNull(message = "Phải chọn người sở hữu kỹ năng")
+    @NotNull(message = "{validation.skill.owner.required}")
     private Long userId;
 }

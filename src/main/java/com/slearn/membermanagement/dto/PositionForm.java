@@ -15,10 +15,10 @@ public class PositionForm {
 
     private Long id;
 
-    @NotBlank(message = "Tên vị trí không được để trống")
-    @Size(max = 150, message = "Tên vị trí tối đa 150 ký tự")
+    @NotBlank(message = "{validation.position.name.required}")
+    @Size(max = 150, message = "{validation.position.name.max}")
     private String name;
 
-    @Size(max = 50, message = "Tên viết tắt tối đa 50 ký tự")
+    @Size(max = 50, message = "{validation.position.abbr.max}")
     private String abbreviation;
 }

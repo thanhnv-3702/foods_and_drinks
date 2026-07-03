@@ -1,5 +1,6 @@
 package com.slearn.membermanagement.controller;
 
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.service.NotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +20,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final MessageService messages;
 
-    public NotificationController(NotificationService notificationService) {
+    public NotificationController(NotificationService notificationService, MessageService messages) {
         this.notificationService = notificationService;
+        this.messages = messages;
     }
 
     @GetMapping
@@ -35,6 +38,7 @@ public class NotificationController {
         model.addAttribute("notifications", notifications);
         model.addAttribute("selectedRead", read);
         model.addAttribute("unreadCount", notificationService.countMyUnread());
+        model.addAttribute("pageTitle", messages.get("page.notifications"));
         model.addAttribute("activeMenu", "notifications");
         return "client/notifications/list";
     }
@@ -43,6 +47,7 @@ public class NotificationController {
     public String detail(@PathVariable Long id, Model model) {
         var notification = notificationService.openMyNotification(id);
         model.addAttribute("notification", notification);
+        model.addAttribute("pageTitle", messages.get("page.notification.detail"));
         model.addAttribute("activeMenu", "notifications");
         return "client/notifications/detail";
     }
@@ -50,14 +55,14 @@ public class NotificationController {
     @PostMapping("/{id}/read")
     public String markAsRead(@PathVariable Long id, RedirectAttributes ra) {
         notificationService.markAsRead(id);
-        ra.addFlashAttribute("successMessage", "Đã đánh dấu notification là đã đọc.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.notification.read"));
         return "redirect:/notifications/" + id;
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes ra) {
         notificationService.deleteMyNotification(id);
-        ra.addFlashAttribute("successMessage", "Đã xóa notification.");
+        ra.addFlashAttribute("successMessage", messages.get("flash.notification.deleted"));
         return "redirect:/notifications";
     }
 }

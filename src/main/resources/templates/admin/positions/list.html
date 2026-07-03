@@ -2,16 +2,16 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Positions - Admin</title>
+    <title th:text="|#{page.positions} - #{nav.admin}|">Positions - Admin</title>
 </head>
 <body>
 <div id="admin-content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Danh sách Positions</h2>
+        <h2 class="h5 mb-0" th:text="#{admin.list.positions}">Position list</h2>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/export/positions.csv}" class="btn btn-outline-success btn-sm">Export CSV</a>
-            <a th:href="@{/admin/positions/new}" class="btn btn-primary btn-sm">+ Thêm Position</a>
+            <a th:href="@{/admin/export/positions.csv}" class="btn btn-outline-success btn-sm" th:text="#{admin.export.csv}">Export CSV</a>
+            <a th:href="@{/admin/positions/new}" class="btn btn-primary btn-sm" th:text="#{admin.add.position}">+ Add position</a>
         </div>
     </div>
 
@@ -20,10 +20,10 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th style="width: 80px;">ID</th>
-                    <th>Tên</th>
-                    <th>Viết tắt</th>
-                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                    <th style="width: 80px;" th:text="#{col.id}">ID</th>
+                    <th th:text="#{col.name}">Name</th>
+                    <th th:text="#{col.abbreviation}">Abbreviation</th>
+                    <th style="width: 160px;" class="text-end" th:text="#{common.actions}">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,16 +33,16 @@
                     <td th:text="${p.abbreviation}">DEV</td>
                     <td class="text-end">
                         <a th:href="@{/admin/positions/{id}/edit(id=${p.id})}"
-                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                           class="btn btn-outline-secondary btn-sm" th:text="#{common.edit}">Edit</a>
                         <form th:action="@{/admin/positions/{id}/delete(id=${p.id})}" method="post"
                               class="d-inline"
-                              onsubmit="return confirm('Xóa vị trí này?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                              th:attr="onsubmit=|return confirm('#{admin.confirm.deletePosition}');|">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{common.delete}">Delete</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${positions.empty}">
-                    <td colspan="4" class="text-center text-muted py-4">Chưa có vị trí nào.</td>
+                    <td colspan="4" class="text-center text-muted py-4" th:text="#{admin.empty.positions}">No positions yet.</td>
                 </tr>
                 </tbody>
             </table>
@@ -51,7 +51,7 @@
 
     <div class="d-flex justify-content-between align-items-center mt-3">
         <span class="text-muted small"
-              th:text="|Tổng: ${positions.totalElements} vị trí|">Tổng: 0</span>
+              th:text="#{admin.total.positions(${positions.totalElements})}">Total: 0</span>
         <div th:replace="~{fragments/pagination :: pager(${positions}, '/admin/positions')}"></div>
     </div>
 </div>

@@ -20,21 +20,24 @@ public class TeamMemberService {
     private final UserRepository userRepository;
     private final TeamMemberHistoryRepository historyRepository;
     private final ActivityLogService activityLogService;
+    private final MessageService messages;
 
     public TeamMemberService(TeamRepository teamRepository,
                              UserRepository userRepository,
                              TeamMemberHistoryRepository historyRepository,
-                             ActivityLogService activityLogService) {
+                             ActivityLogService activityLogService,
+                             MessageService messages) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.historyRepository = historyRepository;
         this.activityLogService = activityLogService;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
     public Team getTeam(Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy team id=" + teamId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.team.notFound", teamId)));
     }
 
     @Transactional(readOnly = true)
@@ -60,7 +63,7 @@ public class TeamMemberService {
     public void addOrMoveMember(Long teamId, Long userId) {
         Team team = getTeam(teamId);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng id=" + userId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.user.notFound", userId)));
 
         // Nếu đã ở đúng team này thì bỏ qua.
         if (user.getTeam() != null && user.getTeam().getId().equals(teamId)) {
@@ -84,7 +87,7 @@ public class TeamMemberService {
         historyRepository.save(history);
 
         activityLogService.record("ADD_MEMBER",
-                "Thêm/di chuyển '" + user.getName() + "' vào team '" + team.getName() + "'");
+                messages.get("activity.member.added", user.getName(), team.getName()));
     }
 
     /**
@@ -93,7 +96,7 @@ public class TeamMemberService {
     @Transactional
     public void removeMember(Long teamId, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng id=" + userId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.user.notFound", userId)));
         if (user.getTeam() == null || !user.getTeam().getId().equals(teamId)) {
             return;
         }
@@ -104,7 +107,7 @@ public class TeamMemberService {
         userRepository.save(user);
 
         activityLogService.record("REMOVE_MEMBER",
-                "Gỡ '" + user.getName() + "' khỏi team '" + oldTeamName + "'");
+                messages.get("activity.member.removed", user.getName(), oldTeamName));
     }
 
     private void closeOpenHistory(Long userId, LocalDateTime when) {

@@ -1,6 +1,7 @@
 package com.slearn.membermanagement.security;
 
 import com.slearn.membermanagement.repository.UserRepository;
+import com.slearn.membermanagement.service.MessageService;
 import com.slearn.membermanagement.support.TestEntityFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,9 @@ class CustomUserDetailsServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private MessageService messages;
+
     @InjectMocks
     private CustomUserDetailsService userDetailsService;
 
@@ -38,8 +42,11 @@ class CustomUserDetailsServiceTest {
     @Test
     void loadUserByUsername_notFound_throws() {
         when(userRepository.findByEmail("missing@test.local")).thenReturn(Optional.empty());
+        when(messages.get("error.user.emailNotFound", "missing@test.local"))
+                .thenReturn("User not found with email: missing@test.local");
 
         assertThatThrownBy(() -> userDetailsService.loadUserByUsername("missing@test.local"))
-                .isInstanceOf(UsernameNotFoundException.class);
+                .isInstanceOf(UsernameNotFoundException.class)
+                .hasMessage("User not found with email: missing@test.local");
     }
 }

@@ -41,6 +41,7 @@ public class CsvExportService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final ActivityLogRepository activityLogRepository;
+    private final MessageService messages;
 
     public CsvExportService(UserRepository userRepository,
                             SkillRepository skillRepository,
@@ -48,7 +49,8 @@ public class CsvExportService {
                             TeamRepository teamRepository,
                             ProjectRepository projectRepository,
                             ProjectMemberRepository projectMemberRepository,
-                            ActivityLogRepository activityLogRepository) {
+                            ActivityLogRepository activityLogRepository,
+                            MessageService messages) {
         this.userRepository = userRepository;
         this.skillRepository = skillRepository;
         this.positionRepository = positionRepository;
@@ -56,6 +58,7 @@ public class CsvExportService {
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.activityLogRepository = activityLogRepository;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -78,7 +81,16 @@ public class CsvExportService {
             ));
         }
         return CsvUtil.build(
-                List.of("ID", "Name", "Email", "Birthday", "Role", "Team", "Position", "Skills"),
+                List.of(
+                        messages.get("csv.header.id"),
+                        messages.get("csv.header.name"),
+                        messages.get("csv.header.email"),
+                        messages.get("csv.header.birthday"),
+                        messages.get("csv.header.role"),
+                        messages.get("csv.header.team"),
+                        messages.get("csv.header.position"),
+                        messages.get("csv.header.skills")
+                ),
                 rows);
     }
 
@@ -88,7 +100,11 @@ public class CsvExportService {
         for (Position p : positionRepository.findAll(BY_ID)) {
             rows.add(List.of(str(p.getId()), nz(p.getName()), nz(p.getAbbreviation())));
         }
-        return CsvUtil.build(List.of("ID", "Name", "Abbreviation"), rows);
+        return CsvUtil.build(List.of(
+                messages.get("csv.header.id"),
+                messages.get("csv.header.name"),
+                messages.get("csv.header.abbreviation")
+        ), rows);
     }
 
     @Transactional(readOnly = true)
@@ -103,7 +119,13 @@ public class CsvExportService {
                     s.getUser() != null ? nz(s.getUser().getName()) : ""
             ));
         }
-        return CsvUtil.build(List.of("ID", "Name", "Level", "UsedYearNumber", "User"), rows);
+        return CsvUtil.build(List.of(
+                messages.get("csv.header.id"),
+                messages.get("csv.header.name"),
+                messages.get("csv.header.level"),
+                messages.get("csv.header.usedYears"),
+                messages.get("csv.header.user")
+        ), rows);
     }
 
     @Transactional(readOnly = true)
@@ -118,7 +140,13 @@ public class CsvExportService {
                     str(userRepository.countByTeamId(t.getId()))
             ));
         }
-        return CsvUtil.build(List.of("ID", "Name", "Description", "Leader", "MemberCount"), rows);
+        return CsvUtil.build(List.of(
+                messages.get("csv.header.id"),
+                messages.get("csv.header.name"),
+                messages.get("csv.header.description"),
+                messages.get("csv.header.leader"),
+                messages.get("csv.header.memberCount")
+        ), rows);
     }
 
     @Transactional(readOnly = true)
@@ -141,7 +169,16 @@ public class CsvExportService {
             ));
         }
         return CsvUtil.build(
-                List.of("ID", "Name", "Abbreviation", "StartDate", "EndDate", "Team", "Leader", "Members"),
+                List.of(
+                        messages.get("csv.header.id"),
+                        messages.get("csv.header.name"),
+                        messages.get("csv.header.abbreviation"),
+                        messages.get("csv.header.startDate"),
+                        messages.get("csv.header.endDate"),
+                        messages.get("csv.header.team"),
+                        messages.get("csv.header.leader"),
+                        messages.get("csv.header.members")
+                ),
                 rows);
     }
 
@@ -154,10 +191,16 @@ public class CsvExportService {
                     fmtDateTime(log.getCreatedAt()),
                     nz(log.getAction()),
                     nz(log.getDescription()),
-                    log.getUser() != null ? nz(log.getUser().getName()) : "Hệ thống"
+                    log.getUser() != null ? nz(log.getUser().getName()) : messages.get("notification.actor.system")
             ));
         }
-        return CsvUtil.build(List.of("ID", "Time", "Action", "Description", "User"), rows);
+        return CsvUtil.build(List.of(
+                messages.get("csv.header.id"),
+                messages.get("csv.header.time"),
+                messages.get("csv.header.action"),
+                messages.get("csv.header.description"),
+                messages.get("csv.header.user")
+        ), rows);
     }
 
     private static String skillLabel(Skill s) {

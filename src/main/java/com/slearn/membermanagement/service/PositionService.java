@@ -14,11 +14,14 @@ public class PositionService {
 
     private final PositionRepository positionRepository;
     private final ActivityLogService activityLogService;
+    private final MessageService messages;
 
     public PositionService(PositionRepository positionRepository,
-                           ActivityLogService activityLogService) {
+                           ActivityLogService activityLogService,
+                           MessageService messages) {
         this.positionRepository = positionRepository;
         this.activityLogService = activityLogService;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -29,7 +32,7 @@ public class PositionService {
     @Transactional(readOnly = true)
     public Position getById(Long id) {
         return positionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy vị trí id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.position.notFound", id)));
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +53,7 @@ public class PositionService {
                 .build();
         positionRepository.save(position);
         activityLogService.record("CREATE_POSITION",
-                "Tạo vị trí '" + position.getName() + "' (id=" + position.getId() + ")");
+                messages.get("activity.position.created", position.getName(), position.getId()));
         return position;
     }
 
@@ -61,7 +64,7 @@ public class PositionService {
         position.setAbbreviation(form.getAbbreviation());
         positionRepository.save(position);
         activityLogService.record("UPDATE_POSITION",
-                "Cập nhật vị trí '" + position.getName() + "' (id=" + position.getId() + ")");
+                messages.get("activity.position.updated", position.getName(), position.getId()));
         return position;
     }
 
@@ -70,6 +73,6 @@ public class PositionService {
         Position position = getById(id);
         positionRepository.delete(position);
         activityLogService.record("DELETE_POSITION",
-                "Xóa vị trí '" + position.getName() + "' (id=" + id + ")");
+                messages.get("activity.position.deleted", position.getName(), id));
     }
 }

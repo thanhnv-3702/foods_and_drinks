@@ -2,13 +2,13 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/client :: layout(~{::title}, ~{::#client-content})}">
 <head>
-    <title>Notification Detail - Member Management</title>
+    <title th:text="|#{page.notification.detail} - #{app.brand}|">Notification detail - Member Management</title>
 </head>
 <body>
 <div id="client-content">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 mb-0">Chi tiết notification</h1>
-        <a class="btn btn-outline-secondary btn-sm" th:href="@{/notifications}">Quay lại</a>
+        <h1 class="h4 mb-0" th:text="#{page.notification.detail}">Notification detail</h1>
+        <a class="btn btn-outline-secondary btn-sm" th:href="@{/notifications}" th:text="#{notification.backToList}">Back to list</a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <span class="badge" th:classappend="${notification.read} ? 'bg-secondary' : 'bg-danger'"
-                      th:text="${notification.read} ? 'Đã đọc' : 'Chưa đọc'">Chưa đọc</span>
+                      th:text="${notification.read} ? #{notification.status.read} : #{notification.status.unread}">Unread</span>
             </div>
 
             <div class="border rounded p-3 bg-light-subtle mb-3">
@@ -34,11 +34,11 @@
 
             <div class="d-flex gap-2">
                 <form method="post" th:if="${!notification.read}" th:action="@{|/notifications/${notification.id}/read|}">
-                    <button type="submit" class="btn btn-primary btn-sm">Đánh dấu đã đọc</button>
+                    <button type="submit" class="btn btn-primary btn-sm" th:text="#{notification.markRead}">Mark as read</button>
                 </form>
                 <form method="post" th:action="@{|/notifications/${notification.id}/delete|}"
-                      onsubmit="return confirm('Bạn có chắc muốn xóa notification này?');">
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                      th:attr="onsubmit=|return confirm('#{notification.confirm.delete}');|">
+                    <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{common.delete}">Delete</button>
                 </form>
             </div>
         </div>

@@ -33,19 +33,22 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final ActivityLogService activityLogService;
     private final NotificationService notificationService;
+    private final MessageService messages;
 
     public ProjectService(ProjectRepository projectRepository,
                           ProjectMemberRepository projectMemberRepository,
                           TeamRepository teamRepository,
                           UserRepository userRepository,
                           ActivityLogService activityLogService,
-                          NotificationService notificationService) {
+                          NotificationService notificationService,
+                          MessageService messages) {
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.activityLogService = activityLogService;
         this.notificationService = notificationService;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -78,7 +81,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public Project getById(Long id) {
         return projectRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy dự án id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.project.notFound", id)));
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +116,7 @@ public class ProjectService {
         syncMembers(project, form.getMemberIds());
         notificationService.notifyProjectCrud(project, NotificationAction.CREATE);
         activityLogService.record("CREATE_PROJECT",
-                "Tạo dự án '" + project.getName() + "' (id=" + project.getId() + ")");
+                messages.get("activity.project.created", project.getName(), project.getId()));
         return project;
     }
 
@@ -130,7 +133,7 @@ public class ProjectService {
         syncMembers(project, form.getMemberIds());
         notificationService.notifyProjectCrud(project, NotificationAction.UPDATE);
         activityLogService.record("UPDATE_PROJECT",
-                "Cập nhật dự án '" + project.getName() + "' (id=" + project.getId() + ")");
+                messages.get("activity.project.updated", project.getName(), project.getId()));
         return project;
     }
 
@@ -144,7 +147,7 @@ public class ProjectService {
         projectMemberRepository.deleteByProjectId(id);
         projectRepository.delete(project);
         activityLogService.record("DELETE_PROJECT",
-                "Xóa dự án '" + project.getName() + "' (id=" + id + ")");
+                messages.get("activity.project.deleted", project.getName(), id));
     }
 
     /**
@@ -182,7 +185,7 @@ public class ProjectService {
             return null;
         }
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy team id=" + teamId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.team.notFound", teamId)));
     }
 
     private User resolveUser(Long userId) {
@@ -190,6 +193,6 @@ public class ProjectService {
             return null;
         }
         return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng id=" + userId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.user.notFound", userId)));
     }
 }

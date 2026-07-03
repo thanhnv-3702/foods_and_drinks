@@ -19,12 +19,15 @@ public class SkillService {
     private final SkillRepository skillRepository;
     private final UserRepository userRepository;
     private final ActivityLogService activityLogService;
+    private final MessageService messages;
 
     public SkillService(SkillRepository skillRepository, UserRepository userRepository,
-                        ActivityLogService activityLogService) {
+                        ActivityLogService activityLogService,
+                        MessageService messages) {
         this.skillRepository = skillRepository;
         this.userRepository = userRepository;
         this.activityLogService = activityLogService;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +43,7 @@ public class SkillService {
     @Transactional(readOnly = true)
     public Skill getById(Long id) {
         return skillRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy kỹ năng id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.skill.notFound", id)));
     }
 
     @Transactional(readOnly = true)
@@ -66,7 +69,7 @@ public class SkillService {
                 .build();
         skillRepository.save(skill);
         activityLogService.record("CREATE_SKILL",
-                "Tạo kỹ năng '" + skill.getName() + "' cho user id=" + user.getId());
+                messages.get("activity.skill.created", skill.getName(), user.getId()));
         return skill;
     }
 
@@ -79,7 +82,7 @@ public class SkillService {
         skill.setUser(findUser(form.getUserId()));
         skillRepository.save(skill);
         activityLogService.record("UPDATE_SKILL",
-                "Cập nhật kỹ năng '" + skill.getName() + "' (id=" + skill.getId() + ")");
+                messages.get("activity.skill.updated", skill.getName(), skill.getId()));
         return skill;
     }
 
@@ -88,11 +91,11 @@ public class SkillService {
         Skill skill = getById(id);
         skillRepository.delete(skill);
         activityLogService.record("DELETE_SKILL",
-                "Xóa kỹ năng '" + skill.getName() + "' (id=" + id + ")");
+                messages.get("activity.skill.deleted", skill.getName(), id));
     }
 
     private User findUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng id=" + userId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.user.notFound", userId)));
     }
 }

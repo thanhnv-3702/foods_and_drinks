@@ -2,14 +2,14 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/client :: layout(~{::title}, ~{::#error-content})}">
 <head>
-    <title>500 - Server Error</title>
+    <title th:text="|500 - #{error.500.title}|">500 - Server Error</title>
 </head>
 <body>
 <div id="error-content">
     <div class="text-center py-5">
         <h1 class="display-4 fw-bold text-danger">500</h1>
-        <p class="lead" th:text="${message} ?: 'Đã xảy ra lỗi. Vui lòng thử lại sau.'">Server error</p>
-        <a th:href="@{/}" class="btn btn-outline-primary mt-2">Về trang chủ</a>
+        <p class="lead" th:text="${message} ?: #{error.500.message}">Server error</p>
+        <a th:href="@{/}" class="btn btn-outline-primary mt-2" th:text="#{error.backHome}">Back to home</a>
     </div>
 </div>
 </body>

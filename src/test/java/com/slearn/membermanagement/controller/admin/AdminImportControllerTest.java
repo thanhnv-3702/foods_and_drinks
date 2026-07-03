@@ -42,7 +42,7 @@ class AdminImportControllerTest extends WebMvcTestBase {
         mockMvc.perform(multipart("/admin/import/positions")
                         .file(new MockMultipartFile("file", new byte[0])))
                 .andExpect(redirectedUrl("/admin/import"))
-                .andExpect(flash().attribute("errorMessage", "Vui lòng chọn file CSV."));
+                .andExpect(flash().attribute("errorMessage", "Please select a CSV file."));
     }
 
     @Test
@@ -51,7 +51,7 @@ class AdminImportControllerTest extends WebMvcTestBase {
 
         mockMvc.perform(multipart("/admin/import/unknown").file(file))
                 .andExpect(redirectedUrl("/admin/import"))
-                .andExpect(flash().attribute("errorMessage", "Đối tượng không hợp lệ: unknown"));
+                .andExpect(flash().attribute("errorMessage", "Invalid import target: unknown"));
     }
 
     @Test
@@ -61,7 +61,7 @@ class AdminImportControllerTest extends WebMvcTestBase {
 
         mockMvc.perform(multipart("/admin/import/positions").file(file))
                 .andExpect(redirectedUrl("/admin/import"))
-                .andExpect(flash().attribute("errorMessage", "Lỗi đọc file: bad format"));
+                .andExpect(flash().attribute("errorMessage", "Failed to read file: bad format"));
     }
 
     @Test

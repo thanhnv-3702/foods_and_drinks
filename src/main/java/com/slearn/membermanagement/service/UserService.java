@@ -26,17 +26,20 @@ public class UserService {
     private final PositionRepository positionRepository;
     private final PasswordEncoder passwordEncoder;
     private final ActivityLogService activityLogService;
+    private final MessageService messages;
 
     public UserService(UserRepository userRepository,
                        TeamRepository teamRepository,
                        PositionRepository positionRepository,
                        PasswordEncoder passwordEncoder,
-                       ActivityLogService activityLogService) {
+                       ActivityLogService activityLogService,
+                       MessageService messages) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.positionRepository = positionRepository;
         this.passwordEncoder = passwordEncoder;
         this.activityLogService = activityLogService;
+        this.messages = messages;
     }
 
     @Transactional(readOnly = true)
@@ -65,7 +68,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.user.notFound", id)));
     }
 
     @Transactional(readOnly = true)
@@ -95,7 +98,7 @@ public class UserService {
                 .build();
         userRepository.save(user);
         activityLogService.record("CREATE_USER",
-                "Tạo người dùng '" + user.getName() + "' (" + user.getEmail() + ")");
+                messages.get("activity.user.created", user.getName(), user.getEmail()));
         return user;
     }
 
@@ -113,7 +116,7 @@ public class UserService {
         user.setPosition(resolvePosition(form.getPositionId()));
         userRepository.save(user);
         activityLogService.record("UPDATE_USER",
-                "Cập nhật người dùng '" + user.getName() + "' (id=" + user.getId() + ")");
+                messages.get("activity.user.updated", user.getName(), user.getId()));
         return user;
     }
 
@@ -124,17 +127,16 @@ public class UserService {
     public String delete(Long id, Long currentUserId) {
         User user = getById(id);
         if (currentUserId != null && currentUserId.equals(id)) {
-            return "Không thể xóa tài khoản đang đăng nhập.";
+            return messages.get("error.user.delete.self");
         }
         try {
             userRepository.delete(user);
             userRepository.flush();
             activityLogService.record("DELETE_USER",
-                    "Xóa người dùng '" + user.getName() + "' (id=" + id + ")");
+                    messages.get("activity.user.deleted", user.getName(), id));
             return null;
         } catch (DataIntegrityViolationException ex) {
-            return "Không thể xóa \"" + user.getName()
-                    + "\" vì đang được tham chiếu (leader team/project, kỹ năng, lịch sử...).";
+            return messages.get("error.user.delete.referenced", user.getName());
         }
     }
 
@@ -143,7 +145,7 @@ public class UserService {
             return null;
         }
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy team id=" + teamId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.team.notFound", teamId)));
     }
 
     private Position resolvePosition(Long positionId) {
@@ -151,6 +153,6 @@ public class UserService {
             return null;
         }
         return positionRepository.findById(positionId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy vị trí id=" + positionId));
+                .orElseThrow(() -> new EntityNotFoundException(messages.get("error.position.notFound", positionId)));
     }
 }

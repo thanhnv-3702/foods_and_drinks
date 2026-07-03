@@ -2,16 +2,16 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Teams - Admin</title>
+    <title th:text="|#{page.teams} - #{nav.admin}|">Teams - Admin</title>
 </head>
 <body>
 <div id="admin-content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0">Danh sách Teams</h2>
+        <h2 class="h5 mb-0" th:text="#{admin.list.teams}">Team list</h2>
         <div class="d-flex gap-2">
-            <a th:href="@{/admin/export/teams.csv}" class="btn btn-outline-success btn-sm">Export CSV</a>
-            <a th:href="@{/admin/teams/new}" class="btn btn-primary btn-sm">+ Thêm Team</a>
+            <a th:href="@{/admin/export/teams.csv}" class="btn btn-outline-success btn-sm" th:text="#{admin.export.csv}">Export CSV</a>
+            <a th:href="@{/admin/teams/new}" class="btn btn-primary btn-sm" th:text="#{admin.add.team}">+ Add team</a>
         </div>
     </div>
 
@@ -20,11 +20,11 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th style="width: 70px;">ID</th>
-                    <th>Tên team</th>
-                    <th>Mô tả</th>
-                    <th>Leader</th>
-                    <th style="width: 160px;" class="text-end">Thao tác</th>
+                    <th style="width: 70px;" th:text="#{col.id}">ID</th>
+                    <th th:text="#{admin.form.team.name}">Team name</th>
+                    <th th:text="#{col.description}">Description</th>
+                    <th th:text="#{col.leader}">Leader</th>
+                    <th style="width: 160px;" class="text-end" th:text="#{common.actions}">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,20 +32,20 @@
                     <td th:text="${t.id}">1</td>
                     <td th:text="${t.name}">Team A</td>
                     <td th:text="${t.description}">Desc</td>
-                    <td th:text="${t.leader != null ? t.leader.name : '-'}">Leader</td>
+                    <td th:text="${t.leader != null ? t.leader.name : #messages.msg('common.none')}">Leader</td>
                     <td class="text-end">
                         <a th:href="@{/admin/teams/{id}/members(id=${t.id})}"
-                           class="btn btn-outline-primary btn-sm">Thành viên</a>
+                           class="btn btn-outline-primary btn-sm" th:text="#{admin.members}">Members</a>
                         <a th:href="@{/admin/teams/{id}/edit(id=${t.id})}"
-                           class="btn btn-outline-secondary btn-sm">Sửa</a>
+                           class="btn btn-outline-secondary btn-sm" th:text="#{common.edit}">Edit</a>
                         <form th:action="@{/admin/teams/{id}/delete(id=${t.id})}" method="post"
-                              class="d-inline" onsubmit="return confirm('Xóa team này?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Xóa</button>
+                              class="d-inline" th:attr="onsubmit=|return confirm('#{admin.confirm.deleteTeam}');|">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" th:text="#{common.delete}">Delete</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${teams.empty}">
-                    <td colspan="5" class="text-center text-muted py-4">Chưa có team nào.</td>
+                    <td colspan="5" class="text-center text-muted py-4" th:text="#{admin.empty.teams}">No teams yet.</td>
                 </tr>
                 </tbody>
             </table>
@@ -53,7 +53,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-3">
-        <span class="text-muted small" th:text="|Tổng: ${teams.totalElements} team|">Tổng: 0</span>
+        <span class="text-muted small" th:text="#{admin.total.teams(${teams.totalElements})}">Total: 0</span>
         <div th:replace="~{fragments/pagination :: pager(${teams}, '/admin/teams')}"></div>
     </div>
 </div>

@@ -2,13 +2,13 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Project Form - Admin</title>
+    <title th:text="${projectForm.id != null} ? |#{page.project.edit} - #{nav.admin}| : |#{page.project.create} - #{nav.admin}|">Project Form - Admin</title>
 </head>
 <body>
 <div id="admin-content">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 mb-0" th:text="${projectForm.id} != null ? 'Sửa dự án' : 'Tạo dự án'">Project</h2>
-        <a th:href="@{/admin/projects}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+        <h2 class="h5 mb-0" th:text="${projectForm.id} != null ? #{page.project.edit} : #{page.project.create}">Project</h2>
+        <a th:href="@{/admin/projects}" class="btn btn-outline-secondary btn-sm" th:text="'&larr; ' + #{common.back}">&larr; Back</a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -18,59 +18,59 @@
                 <div th:replace="~{fragments/form-validation :: summary}"></div>
                 <div class="row">
                     <div class="col-md-8 mb-3">
-                        <label for="name" class="form-label">Tên dự án <span class="text-danger">*</span></label>
+                        <label for="name" class="form-label"><span th:text="#{admin.form.project.name}">Project name</span> <span class="text-danger">*</span></label>
                         <input type="text" id="name" class="form-control" th:field="*{name}"
                                th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Lỗi</div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="abbreviation" class="form-label">Viết tắt</label>
+                        <label for="abbreviation" class="form-label" th:text="#{admin.form.abbreviation}">Abbreviation</label>
                         <input type="text" id="abbreviation" class="form-control" th:field="*{abbreviation}"
                                th:classappend="${#fields.hasErrors('abbreviation')} ? 'is-invalid'">
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('abbreviation')}"
-                             th:errors="*{abbreviation}">Lỗi</div>
+                             th:errors="*{abbreviation}"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="startDate" class="form-label">Ngày bắt đầu</label>
+                        <label for="startDate" class="form-label" th:text="#{admin.form.startDate}">Start date</label>
                         <input type="date" id="startDate" class="form-control" th:field="*{startDate}">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="endDate" class="form-label">Ngày kết thúc</label>
+                        <label for="endDate" class="form-label" th:text="#{admin.form.endDate}">End date</label>
                         <input type="date" id="endDate" class="form-control" th:field="*{endDate}"
                                th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid'">
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">Lỗi</div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="teamId" class="form-label">Team <span class="text-danger">*</span></label>
+                        <label for="teamId" class="form-label"><span th:text="#{col.team}">Team</span> <span class="text-danger">*</span></label>
                         <select id="teamId" class="form-select" th:field="*{teamId}"
                                 th:classappend="${#fields.hasErrors('teamId')} ? 'is-invalid'">
-                            <option value="">-- Chọn team --</option>
+                            <option value="" th:text="#{admin.select.team}">-- Select team --</option>
                             <option th:each="t : ${teams}" th:value="${t.id}" th:text="${t.name}">Team</option>
                         </select>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('teamId')}" th:errors="*{teamId}">Lỗi</div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('teamId')}" th:errors="*{teamId}"></div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="leaderId" class="form-label">Project leader</label>
+                        <label for="leaderId" class="form-label" th:text="#{admin.form.projectLeader}">Project leader</label>
                         <select id="leaderId" class="form-select" th:field="*{leaderId}">
-                            <option value="">-- Chưa gán --</option>
+                            <option value="" th:text="#{common.notAssigned}">Not assigned</option>
                             <option th:each="u : ${users}" th:value="${u.id}"
                                     th:text="${u.name + ' (' + u.email + ')'}">User</option>
                         </select>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="memberIds" class="form-label">Thành viên dự án</label>
+                    <label for="memberIds" class="form-label" th:text="#{admin.form.teamMembers}">Project members</label>
                     <select id="memberIds" class="form-select" th:field="*{memberIds}" multiple size="8">
                         <option th:each="u : ${users}" th:value="${u.id}"
                                 th:text="${u.name + ' (' + u.email + ')'}">User</option>
                     </select>
-                    <div class="form-text">Giữ Ctrl (Windows) / Cmd (Mac) để chọn nhiều thành viên.</div>
+                    <div class="form-text" th:text="#{admin.form.multiSelectHint}">Hold Ctrl (Windows) / Cmd (Mac) to select multiple members.</div>
                 </div>
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary" th:text="#{common.save}">Save</button>
             </form>
         </div>
     </div>

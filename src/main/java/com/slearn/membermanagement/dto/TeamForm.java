@@ -15,11 +15,11 @@ public class TeamForm {
 
     private Long id;
 
-    @NotBlank(message = "Tên team không được để trống")
-    @Size(max = 150, message = "Tên team tối đa 150 ký tự")
+    @NotBlank(message = "{validation.team.name.required}")
+    @Size(max = 150, message = "{validation.team.name.max}")
     private String name;
 
-    @Size(max = 500, message = "Mô tả tối đa 500 ký tự")
+    @Size(max = 500, message = "{validation.description.max}")
     private String description;
 
     private Long leaderId;

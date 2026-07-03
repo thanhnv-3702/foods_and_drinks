@@ -56,7 +56,7 @@ class AdminSkillControllerTest extends WebMvcTestBase {
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/skills/form"))
                 .andExpect(model().attributeExists("skillForm"))
-                .andExpect(model().attribute("pageTitle", "Tạo Skill"));
+                .andExpect(model().attribute("pageTitle", "Create skill"));
     }
 
     @Test
@@ -66,7 +66,7 @@ class AdminSkillControllerTest extends WebMvcTestBase {
                         .param("userId", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/skills"))
-                .andExpect(flash().attribute("successMessage", "Đã tạo kỹ năng thành công."));
+                .andExpect(flash().attribute("successMessage", "Skill created successfully."));
 
         verify(skillService).create(any(SkillForm.class));
     }
@@ -78,7 +78,7 @@ class AdminSkillControllerTest extends WebMvcTestBase {
         mockMvc.perform(post("/admin/skills").param("name", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/skills/form"))
-                .andExpect(model().attribute("pageTitle", "Tạo Skill"));
+                .andExpect(model().attribute("pageTitle", "Create skill"));
     }
 
     @Test
@@ -99,7 +99,7 @@ class AdminSkillControllerTest extends WebMvcTestBase {
         mockMvc.perform(get("/admin/skills/1/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/skills/form"))
-                .andExpect(model().attribute("pageTitle", "Sửa Skill"));
+                .andExpect(model().attribute("pageTitle", "Edit skill"));
     }
 
     @Test
@@ -108,7 +108,7 @@ class AdminSkillControllerTest extends WebMvcTestBase {
                         .param("name", "Go")
                         .param("userId", "1"))
                 .andExpect(redirectedUrl("/admin/skills"))
-                .andExpect(flash().attribute("successMessage", "Đã cập nhật kỹ năng thành công."));
+                .andExpect(flash().attribute("successMessage", "Skill updated successfully."));
 
         verify(skillService).update(eq(2L), any(SkillForm.class));
     }
@@ -120,14 +120,14 @@ class AdminSkillControllerTest extends WebMvcTestBase {
         mockMvc.perform(post("/admin/skills/2").param("name", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/skills/form"))
-                .andExpect(model().attribute("pageTitle", "Sửa Skill"));
+                .andExpect(model().attribute("pageTitle", "Edit skill"));
     }
 
     @Test
     void delete_redirects() throws Exception {
         mockMvc.perform(post("/admin/skills/3/delete"))
                 .andExpect(redirectedUrl("/admin/skills"))
-                .andExpect(flash().attribute("successMessage", "Đã xóa kỹ năng."));
+                .andExpect(flash().attribute("successMessage", "Skill deleted."));
 
         verify(skillService).delete(3L);
     }

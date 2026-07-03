@@ -4,12 +4,14 @@ import com.slearn.membermanagement.dto.PositionForm;
 import com.slearn.membermanagement.entity.Position;
 import com.slearn.membermanagement.repository.PositionRepository;
 import com.slearn.membermanagement.support.TestEntityFactory;
+import com.slearn.membermanagement.support.TestMessageSupport;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -30,6 +32,9 @@ class PositionServiceTest {
 
     @Mock
     private ActivityLogService activityLogService;
+
+    @Spy
+    private MessageService messages = TestMessageSupport.vietnamese();
 
     @InjectMocks
     private PositionService positionService;

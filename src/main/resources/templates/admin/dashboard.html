@@ -2,41 +2,41 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/admin :: layout(~{::title}, ~{::#admin-content})}">
 <head>
-    <title>Dashboard - Admin</title>
+    <title th:text="|#{page.dashboard} - #{nav.admin}|">Dashboard - Admin</title>
 </head>
 <body>
 <div id="admin-content">
     <div class="section-heading mb-4">
-        <h2 class="h4 mb-1">Dashboard</h2>
-        <p class="subtitle mb-0">Tổng quan hệ thống quản lý thành viên</p>
+        <h2 class="h4 mb-1" th:text="#{page.dashboard}">Dashboard</h2>
+        <p class="subtitle mb-0" th:text="#{admin.dashboard.subtitle}">Member management overview</p>
     </div>
     <div class="row g-4">
         <div class="col-md-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h2 class="h6 text-muted text-uppercase">Users</h2>
-                    <p class="display-6 mb-0">—</p>
+                    <h2 class="h6 text-muted text-uppercase" th:text="#{page.users}">Users</h2>
+                    <p class="display-6 mb-0" th:text="#{common.none}">—</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h2 class="h6 text-muted text-uppercase">Teams</h2>
-                    <p class="display-6 mb-0">—</p>
+                    <h2 class="h6 text-muted text-uppercase" th:text="#{page.teams}">Teams</h2>
+                    <p class="display-6 mb-0" th:text="#{common.none}">—</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h2 class="h6 text-muted text-uppercase">Projects</h2>
-                    <p class="display-6 mb-0">—</p>
+                    <h2 class="h6 text-muted text-uppercase" th:text="#{page.projects}">Projects</h2>
+                    <p class="display-6 mb-0" th:text="#{common.none}">—</p>
                 </div>
             </div>
         </div>
     </div>
-    <p class="text-muted mt-4 small mb-0">Chọn mục từ sidebar để quản lý dữ liệu.</p>
+    <p class="text-muted mt-4 small mb-0" th:text="#{admin.dashboard.hint}">Select an item from the sidebar to manage data.</p>
 </div>
 </body>
 </html>

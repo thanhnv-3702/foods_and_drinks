@@ -23,7 +23,7 @@ class PositionFormValidationTest {
         var violations = validator.validate(form);
 
         assertThat(violations).isNotEmpty();
-        assertThat(violations.iterator().next().getMessage()).contains("Tên vị trí");
+        assertThat(violations.iterator().next().getMessage()).isEqualTo("{validation.position.name.required}");
     }
 
     @Test

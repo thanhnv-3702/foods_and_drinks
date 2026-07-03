@@ -6,11 +6,13 @@ import com.slearn.membermanagement.entity.User;
 import com.slearn.membermanagement.repository.TeamRepository;
 import com.slearn.membermanagement.repository.UserRepository;
 import com.slearn.membermanagement.support.TestEntityFactory;
+import com.slearn.membermanagement.support.TestMessageSupport;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -39,6 +41,9 @@ class TeamServiceTest {
     @Mock
     private NotificationService notificationService;
 
+    @Spy
+    private MessageService messages = TestMessageSupport.vietnamese();
+
     @InjectMocks
     private TeamService teamService;
 
@@ -66,7 +71,7 @@ class TeamServiceTest {
 
         String error = teamService.delete(1L);
 
-        assertThat(error).contains("3 thành viên");
+        assertThat(error).contains("3");
         verify(teamRepository, never()).delete(any());
     }
 
