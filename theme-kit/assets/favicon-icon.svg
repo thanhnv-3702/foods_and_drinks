@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TechJA">
+  <defs>
+    <linearGradient id="techja-grad" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F38744"/>
+      <stop offset="0.55" stop-color="#F26B2E"/>
+      <stop offset="1" stop-color="#F0483E"/>
+    </linearGradient>
+  </defs>
+  <polygon points="28,8 48,28 28,48 8,28" fill="none" stroke="url(#techja-grad)" stroke-width="2.4" stroke-linejoin="round"/>
+  <polygon points="28,16 48,36 28,56 8,36" fill="none" stroke="url(#techja-grad)" stroke-width="2.4" stroke-linejoin="round"/>
+</svg>

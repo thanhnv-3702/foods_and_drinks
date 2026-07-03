@@ -1,0 +1,65 @@
+/* ============================================================
+   TechJA Design Tokens (framework-agnostic)
+   Style: Untitled UI, primary cam. Tham chieu S*Learn.
+   Co the dung truc tiep voi bat ky stack nao (chi can CSS variables).
+   ============================================================ */
+
+:root {
+  /* Surface */
+  --background: #ffffff;
+  --foreground: #101828;
+
+  --card: #ffffff;
+  --card-foreground: #101828;
+
+  /* Brand */
+  --primary: #f38744;
+  --primary-foreground: #ffffff;
+
+  --secondary: #2e90fa;
+  --secondary-foreground: #ffffff;
+
+  --accent: #fef6ee;
+  --accent-foreground: #b93815;
+
+  /* Neutral */
+  --muted: #f2f4f7;
+  --muted-foreground: #667085;
+
+  --border: #eaecf0;
+  --input: #d0d5dd;
+  --ring: #f38744;
+
+  /* Status */
+  --success: #15803d;
+  --warning: #f79009;
+  --danger: #f04438;
+
+  /* Radius scale */
+  --radius: 0.5rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+/* ----------------------------------------------------------------
+   (Tuy chon) Dark mode - chua dung trong ban goc, gia tri goi y.
+   Bo comment va tinh chinh neu can.
+   ----------------------------------------------------------------
+.dark {
+  --background: #0c111d;
+  --foreground: #f5f6f8;
+  --card: #161b26;
+  --card-foreground: #f5f6f8;
+  --muted: #1f242f;
+  --muted-foreground: #94a3b8;
+  --border: #1f242f;
+  --input: #333741;
+  --accent: #271c14;
+  --accent-foreground: #f7b27a;
+}
+*/

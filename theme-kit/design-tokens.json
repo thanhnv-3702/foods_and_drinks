@@ -1,0 +1,44 @@
+{
+  "$meta": {
+    "name": "TechJA Theme",
+    "style": "Untitled UI, primary orange",
+    "reference": "S*Learn",
+    "font": "Inter"
+  },
+  "color": {
+    "background": "#ffffff",
+    "foreground": "#101828",
+    "card": "#ffffff",
+    "card-foreground": "#101828",
+    "primary": "#f38744",
+    "primary-foreground": "#ffffff",
+    "secondary": "#2e90fa",
+    "secondary-foreground": "#ffffff",
+    "accent": "#fef6ee",
+    "accent-foreground": "#b93815",
+    "muted": "#f2f4f7",
+    "muted-foreground": "#667085",
+    "border": "#eaecf0",
+    "input": "#d0d5dd",
+    "ring": "#f38744",
+    "success": "#15803d",
+    "warning": "#f79009",
+    "danger": "#f04438"
+  },
+  "radius": {
+    "base": "0.5rem",
+    "sm": "calc(0.5rem - 4px)",
+    "md": "calc(0.5rem - 2px)",
+    "lg": "0.5rem",
+    "xl": "calc(0.5rem + 4px)"
+  },
+  "typography": {
+    "fontSans": "Inter, system-ui, sans-serif",
+    "weights": [300, 400, 500, 600, 700, 800]
+  },
+  "layout": {
+    "containerMaxWidth": "1280px",
+    "containerPaddingInline": "1rem",
+    "headerHeight": "4rem"
+  }
+}

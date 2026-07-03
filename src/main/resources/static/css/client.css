@@ -1,6 +1,78 @@
-/* Client layout tweaks */
-.navbar-brand {
-    letter-spacing: 0.02em;
+/* Client layout — TechJA theme extensions */
+
+.techja-navbar {
+  background-color: var(--card) !important;
+  border-bottom: 1px solid var(--border);
+  min-height: 4rem;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.techja-navbar .navbar-brand {
+  font-weight: 700;
+  color: var(--foreground) !important;
+  letter-spacing: -0.02em;
+  gap: 0.5rem;
+}
+
+.techja-navbar .navbar-brand img {
+  height: 28px;
+  width: auto;
+}
+
+.techja-navbar .nav-link {
+  color: var(--muted-foreground) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.85rem !important;
+  border-radius: 50rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.techja-navbar .nav-link:hover,
+.techja-navbar .nav-link.active {
+  color: var(--foreground) !important;
+  background-color: var(--accent);
+}
+
+.techja-navbar .navbar-toggler {
+  border-color: var(--border);
+}
+
+.techja-navbar .navbar-toggler-icon {
+  filter: none;
+}
+
+.techja-footer {
+  background-color: var(--card);
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+}
+
+.techja-hero {
+  background: linear-gradient(180deg, var(--card) 0%, var(--muted) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2rem;
+}
+
+.techja-hero .display-5 {
+  color: var(--foreground);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 576px) {
+  .techja-navbar .badge {
+    font-size: 0.65rem;
+  }
+}
+
+.card {
+  border-radius: var(--radius-lg);
+}
+
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
 }
 
 .card {
